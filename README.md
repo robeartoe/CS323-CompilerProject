@@ -1,3 +1,6 @@
+# Discord:
+https://discord.gg/4DGyEUZ
+
 # To Run Files:
 This took me a while to figure out because I'm still pretty new to compiling code on the terminal. But to compile code. Be on the folder directory and type in the following:
 ``` bash
