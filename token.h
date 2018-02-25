@@ -22,12 +22,15 @@ public:
   }tokenType;
 
   tokenType TT;
+  std::string tokenTString;
   std::string lexeme;
 
   // TODO: Figure out how to get string into the correct object type:
   // static const auto literal;
 
-  Token(std::string lex,tokenType tt);
+  Token(std::string lex,tokenType tt,std::string tStr);
+
+  std::pair<std::string,std::string> outputToken();
 
 };
 

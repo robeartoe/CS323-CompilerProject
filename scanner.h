@@ -11,9 +11,10 @@ private:
   std::vector<Token> tokens;
 
 public:
-  Scanner();
-  void lexer(std::string value);
-  void outputTokens();
+  Scanner(std::string fileString);
+  void lexer();
+  std::pair<std::string,std::string> outputToken(int index);
+  int getTokensLength();
   void getTest();
 };
 
