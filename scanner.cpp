@@ -5,9 +5,7 @@
 #include <iostream>
 using namespace std;
 
-Scanner::Scanner(string fileString){
-  source = fileString;
-}
+Scanner::Scanner(string fileString) : source(fileString) {};
 
 void Scanner::lexer(){
   // The Magic Takes Place Here:
@@ -19,7 +17,7 @@ std::pair<std::string,std::string> Scanner::outputToken(int index){
   return tokens[index].outputToken();
 }
 
-int Scanner::getTokensLength(){
+const int Scanner::getTokensLength() const {
   return tokens.size();
 }
 

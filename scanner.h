@@ -14,7 +14,7 @@ public:
   Scanner(std::string fileString);
   void lexer();
   std::pair<std::string,std::string> outputToken(int index);
-  int getTokensLength();
+  const  int getTokensLength() const;
   void getTest();
 };
 
