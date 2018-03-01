@@ -17,6 +17,11 @@ Also, simply running run.sh will automate these two commands simply run:
 ./run.sh
 ```
 
+While in the main directory:
+  run 'make' command from the terminal - this will execute g++ main.cpp
+  scanner.cpp token.cpp and generate an object file named 'run'.  To execute
+  this file type ./run in the terminal.  To remove this file simply type 
+  'make clean' in the terminal and the command 'rm run' will execute.
 
 # Resources For Class:
 1. [Building a Simple Interpreter in Python](https://ruslanspivak.com/lsbasi-part1/)
