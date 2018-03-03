@@ -3,19 +3,27 @@
 
 #include <string>
 #include <vector>
-#include "token.h"
+#include <iostream>
+#include <fstream>
+
+struct Token {
+	std::string token;
+	std::string lexeme;
+};
 
 class Scanner {
-private:
-  std::string source;
-  std::vector<Token> tokens;
+	private:
+		std::ifstream input;
+		bool Scanner::isOpSepChar(char a);
+		bool Scanner::isSpecNextChar(char a);
+		bool Scanner::lookAhead(char a);
+		Token Scanner::intRealFSM(std::string tkn);
+		Token Scanner::idFSM(std::string tkn);
 
-public:
-  Scanner(std::string fileString);
-  void lexer();
-  std::pair<std::string,std::string> outputToken(int index);
-  const  int getTokensLength() const;
-  void getTest();
+	public:
+		Scanner::Scanner(std::string fileName);
+		Token Scanner::lexer();
+		bool Scanner::iseof();
 };
 
 #endif
