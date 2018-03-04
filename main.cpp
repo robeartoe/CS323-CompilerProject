@@ -24,9 +24,8 @@ int main(){
 	std::cout << "Input Name of File: ";
 	getline(cin,fileInputName);
 
-  //We need to output to a file, as per requirements for assignment 1.
-	std::cout << "Input Name of Output File: ";
-	getline(cin,fileOutputName);
+	//std::cout << "Input Name of Output File: ";
+	//getline(cin,fileOutputName);
 
 	Scanner lex = Scanner::Scanner(fileInputName);
 
@@ -34,15 +33,10 @@ int main(){
 		tkns.push_back(lex.lexer());
 
 
-  ofstream outputFile(fileInputName.c_str());
-  outputFile.open()
 	for (int i = 0; i < tkns.size(); i++)
 	{
-		cout << "token: " << tkns[i].token << "\tlexeme: " << tkns[i].lexeme << endl << endl;
-    outputFile << "token: "<<tkns[i].token << "\tlexeme: " << tkns[i].lexeme << endl << endl;
-
+		cout << "token: " << tkns[i].token << "\t\t\tlexeme: " << tkns[i].lexeme << endl << endl;
 	}
-  outputFile.close();
 
 	return 0;
 }
