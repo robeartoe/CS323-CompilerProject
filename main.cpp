@@ -12,31 +12,32 @@ but YOU HAVE TO CONSTRUCT A FSM for this assignment otherwise, there will be a d
 #include <string>
 #include <streambuf>
 #include <vector>
-
 #include "scanner.h"
 using namespace std;
 
 int main(){
-
 	string fileInputName,fileOutputName;	// File Handles to be Processed
 	vector<Token> tkns;
-
+	
 	std::cout << "Input Name of File: ";
 	getline(cin,fileInputName);
 
-	//std::cout << "Input Name of Output File: ";
-	//getline(cin,fileOutputName);
+	std::cout << "Input Name of Output File: ";
+	getline(cin,fileOutputName);
 
 	Scanner lex = Scanner::Scanner(fileInputName);
 
 	while (!lex.iseof())
 		tkns.push_back(lex.lexer());
 
-
+	ofstream outputFile;
+	outputFile.open(fileOutputName);
 	for (int i = 0; i < tkns.size(); i++)
 	{
-		cout << "token: " << tkns[i].token << "\t\t\tlexeme: " << tkns[i].lexeme << endl << endl;
+		cout << "token: " << tkns[i].token << "\t\t\tlexeme: " << tkns[i].lexeme << endl;
+		outputFile << "token: " << tkns[i].token << "\tlexeme: " << tkns[i].lexeme << endl;
 	}
+	outputFile.close();
 
 	return 0;
 }

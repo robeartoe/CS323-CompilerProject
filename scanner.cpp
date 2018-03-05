@@ -257,7 +257,8 @@ bool Scanner::lookAhead(char a)
 
 bool Scanner::iseof()
 {
-	if (input.eof())
+	char c = static_cast<char>(input.get());
+	if (c == EOF || c == -1)
 		return true;
 	else
 		return false;
