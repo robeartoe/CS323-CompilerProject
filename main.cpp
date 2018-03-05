@@ -25,7 +25,7 @@ int main(){
 	std::cout << "Input Name of Output File: ";
 	getline(cin,fileOutputName);
 
-	Scanner lex = Scanner::Scanner(fileInputName);
+	Scanner lex = Scanner(fileInputName);
 
 	while (!lex.iseof())
 		tkns.push_back(lex.lexer());
