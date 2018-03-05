@@ -1,7 +1,13 @@
-// Contains Scanner Class
-// This class parses through the text file and creates token objects.
+/*
+CPSC 323-02
+Names:	Stephen Shinn
+Michael Perna
+Robert Ruiz
+
+Project: Assignment 1
+*/
+
 #include "scanner.h"
-#include <fstream>
 using namespace std;
 
 Scanner::Scanner(string fileName){
@@ -17,6 +23,7 @@ Token Scanner::lexer(){			//lexer fuction
 
 	//Implement the tokenizer (create a token from the input stream to test with the FSMs)
 	
+
 	while (!tokenFound)
 	{
 		testChar = static_cast<char>(input.get());			//casts the int from input stream into a char and assigns it to testChar
@@ -31,7 +38,7 @@ Token Scanner::lexer(){			//lexer fuction
 			{
 				token.push_back(testChar);	// Adds the character into the token string
 
-				if (isSpecNextChar(testChar))	// This part determines if the character is part of a two-character relative operator or %% separator
+				if (isSpecNextChar(testChar, nextChar))	// This part determines if the character is part of a two-character relative operator or %% separator
 				{
 					tokenFound = false;			// Ensures the algorithm continues searching for token
 				}
@@ -82,8 +89,16 @@ Token Scanner::lexer(){			//lexer fuction
 		{
 			if (isOpSepChar(token.at(0)) && isOpSepChar(testChar))	// Checks to see if prevChar was a op/sep and testChar to see if it is also an op/sep (Condition for continuing token taken care of in first section)
 			{
-				token.push_back(testChar);
-				tokenFound = true;
+				if (isSpecChar(token.at(0), testChar))
+				{
+					token.push_back(testChar);
+					tokenFound = true;
+				}
+				else
+				{
+					input.unget();
+					tokenFound = true;
+				}
 			}
 			else
 				if (isalpha(token.at(0)))	// Checking to see if non-empty token begins with alpha
@@ -147,7 +162,15 @@ Token Scanner::lexer(){			//lexer fuction
 							tokenFound = false;
 						}
 						else
-							tokenFound = true;
+							if (isOpSepChar(token.at(0)) && isUnrecognized(testChar))
+							{
+								input.unget();
+								tokenFound = true;
+							}
+							else
+							{
+								tokenFound = true;
+							}
 
 		}
 
@@ -211,11 +234,43 @@ bool Scanner::isOpSepChar(char a)
 	return 0;
 }
 
-bool Scanner::isSpecNextChar(char a)
+bool Scanner::isSpecNextChar(char a, char b)
 {
-	char next = static_cast<char>(input.peek());
 	if (a == '=')
-		switch (next)
+		switch (b)
+		{
+		case '>':
+		case '<':
+		case '=':
+			return true;
+		default:
+			return false;
+		}
+	else
+		if (a == '^')
+		{
+			if (b == '=')
+				return true;
+			else
+				return false;
+		}
+		else
+			if (a == '%')
+			{
+				if (b == '%')
+					return true;
+				else
+					return false;
+			}
+			else
+				return false;
+
+}
+
+bool Scanner::isSpecChar(char a, char b)
+{
+	if (a == '=')
+		switch (b)
 		{
 		case '>':
 		case '<':
@@ -225,18 +280,17 @@ bool Scanner::isSpecNextChar(char a)
 	else
 		if (a == '^')
 		{
-			if (next == '=')
+			if (b == '=')
 				return true;
 		}
 		else
 			if (a == '%')
 			{
-				if (next == '%')
+				if (b == '%')
 					return true;
 			}
 			else
 				return false;
-
 }
 
 bool Scanner::isKeyword(string tkn)
@@ -249,16 +303,9 @@ bool Scanner::isKeyword(string tkn)
 	
 }
 
-bool Scanner::lookAhead(char a)
-{
-
-	return false;
-}
-
 bool Scanner::iseof()
 {
-	char c = static_cast<char>(input.get());
-	if (c == EOF || c == -1)
+	if (input.peek() == EOF)
 		return true;
 	else
 		return false;
@@ -317,7 +364,7 @@ Token Scanner::opSepCheck(string tkn)
 						lx = "separator";
 					break;
 				default:
-					lx = "unrecognized (opSepCheck str size 2)";
+					lx = "unrecognized";
 					break;
 				}
 			}
@@ -547,7 +594,6 @@ Token Scanner::idFSM(string tkn)
 				break;
 			case 4:
 				lx = "identifier";
-			//IMPLEMENT KEYWORD PART HERE
 				if (isKeyword(tkn))
 					lx = "keyword";
 				break;

@@ -1,43 +1,59 @@
-//Main File to read file:
-
 /*
-The first assignment is to write a lexical analyzer (lexer)
-You can build your entire lexer using a FSM, Or build using at least FSMs for identifier, integer and real (the rest can be written ad-hoc)
-but YOU HAVE TO CONSTRUCT A FSM for this assignment otherwise, there will be a deduction of 2 points!
+CPSC 323-02
+Names:	Stephen Shinn
+		Michael Perna
+		Robert Ruiz
+
+Project: Assignment 1
 */
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <streambuf>
-#include <vector>
 #include "scanner.h"
 using namespace std;
 
-int main(){
-	string fileInputName,fileOutputName;	// File Handles to be Processed
-	vector<Token> tkns;
-	
-	std::cout << "Input Name of File: ";
-	getline(cin,fileInputName);
+bool fileExists(std::string fileName)
+{
+	std::ifstream infile(fileName);
+	return infile.good();
+}
 
-	std::cout << "Input Name of Output File: ";
+int main(){
+
+	string fileInputName,fileOutputName;	// File Handles to be Processed
+	Token tkns;
+
+
+	std::cout << "Please enter the name of the input file: ";
+	getline(cin, fileInputName);
+
+	if (!fileExists(fileInputName))
+	{
+		cout << "File does not exist!";
+		exit(0);
+	}
+
+	cout << endl;
+
+	
+	std::cout << "Please enter the name of the output file: ";
 	getline(cin,fileOutputName);
+
+	ofstream output;
+	output.open(fileOutputName);
 
 	Scanner lex = Scanner::Scanner(fileInputName);
 
-	while (!lex.iseof())
-		tkns.push_back(lex.lexer());
 
-	ofstream outputFile;
-	outputFile.open(fileOutputName);
-	for (int i = 0; i < tkns.size(); i++)
+	cout << "Token\t\t\tLexeme" << endl;
+	output << "Token\t\t\tLexeme" << endl;
+	while (!lex.iseof())
 	{
-		cout << "token: " << tkns[i].token << "\t\t\tlexeme: " << tkns[i].lexeme << endl;
-		outputFile << "token: " << tkns[i].token << "\tlexeme: " << tkns[i].lexeme << endl;
+		tkns = lex.lexer();
+		if (tkns.token.at(0) != EOF)
+		{
+			cout << "token: " << tkns.token << "\t\t\tlexeme: " << tkns.lexeme << endl;
+			output << "token: " << tkns.token << "\t\t\tlexeme: " << tkns.lexeme << endl;
+		}
 	}
-	outputFile.close();
 
 	return 0;
 }

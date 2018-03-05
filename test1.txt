@@ -1,13 +1,9 @@
-! This file is for sample code which add two ints. This file is < 10 source lines !
-
 function add$[a:int,b:int]
 {
   return a + b;
 }
 
 %%
-
   int A, B123$; !Declarations!
   get(A,B);
-  put(A,B$);
   put(add$(A,B123$));
