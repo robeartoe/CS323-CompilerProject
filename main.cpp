@@ -40,7 +40,7 @@ int main(){
 	ofstream output;
 	output.open(fileOutputName);
 
-	Scanner lex = Scanner::Scanner(fileInputName);
+	Scanner lex = Scanner(fileInputName);
 
 
 	cout << "Token\t\t\tLexeme" << endl;
