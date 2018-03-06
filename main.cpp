@@ -44,7 +44,7 @@ int main(){
 	ofstream output;
 	output.open(fileOutputName);
 
-	Scanner lex = Scanner::Scanner(fileInputName);
+	Scanner lex = Scanner(fileInputName);
 
 
 	cout << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;

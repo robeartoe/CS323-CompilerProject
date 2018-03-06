@@ -24,19 +24,19 @@ class Scanner {
 	private:
 		std::ifstream input;
 		std::vector<std::string> keywords{ "int", "boolean", "real", "if", "endif", "else", "return", "put", "get", "while", "true", "false" };
-		bool Scanner::isUnrecognized(char a);
-		bool Scanner::isOpSepChar(char a);
-		bool Scanner::isSpecNextChar(char a, char b);
-		bool Scanner::isSpecChar(char a, char b);
-		bool Scanner::isKeyword(std::string tkn);
-		Token Scanner::intRealFSM(std::string tkn);
-		Token Scanner::idFSM(std::string tkn);
-		Token Scanner::opSepCheck(std::string tkn);
+		bool isUnrecognized(char a);
+		bool isOpSepChar(char a);
+		bool isSpecNextChar(char a, char b);
+		bool isSpecChar(char a, char b);
+		bool isKeyword(std::string tkn);
+		Token intRealFSM(std::string tkn);
+		Token idFSM(std::string tkn);
+		Token opSepCheck(std::string tkn);
 
 	public:
-		Scanner::Scanner(std::string fileName);
-		Token Scanner::lexer();
-		bool Scanner::iseof();
+		Scanner(std::string fileName);
+		Token lexer();
+		bool iseof();
 };
 
 #endif
