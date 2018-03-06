@@ -1,56 +1,65 @@
-//Main File to read file:
-
 /*
-The first assignment is to write a lexical analyzer (lexer)
-You can build your entire lexer using a FSM, Or build using at least FSMs for identifier, integer and real (the rest can be written ad-hoc)
-but YOU HAVE TO CONSTRUCT A FSM for this assignment otherwise, there will be a deduction of 2 points!
+CPSC 323-02
+Names:	Stephen Shinn
+		Michael Perna
+		Robert Ruiz
+
+Project: Assignment 1
 */
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <streambuf>
-
 #include "scanner.h"
+#include <iomanip>
 using namespace std;
 
+bool fileExists(std::string fileName)
+{
+	std::ifstream infile(fileName);
+	return infile.good();
+}
+
 int main(){
-  string fileInputName,fileOutputName;
 
-  std::cout << "Input Name of File: ";
-  getline(cin,fileInputName);
+	string fileInputName,fileOutputName;	// File Handles to be Processed
+	Token tkns;
 
-  std::cout << "Input Name of Output File: ";
-  getline(cin,fileOutputName);
 
-  ifstream inputFile(fileInputName.c_str());
-  ofstream outputFile(fileOutputName.c_str());
+	std::cout << "Please enter the name of the input file: ";
+	getline(cin, fileInputName);
 
-  if (inputFile.is_open() && outputFile.is_open()) {
-    std::string fileString( (std::istreambuf_iterator<char>(inputFile)),(std::istreambuf_iterator<char>()));
+	cout << endl;
 
-    Scanner scan(fileString);
+	if (!fileExists(fileInputName))
+	{
+		cout << "File does not exist!" << endl << endl;
+		system("pause");
+		exit(0);
+	}
 
-    scan.lexer();
+	
+	std::cout << "Please enter the name of the output file: ";
+	getline(cin,fileOutputName);
 
-    // Write to File and Display Tokens:
-    // Why not do both at the same time?
-    std::cout <<setw(0) << "Token" << setw(20) <<"Lexeme" << '\n';
-    outputFile << setw(0)<< "Token" << setw(20) << "Lexeme" << '\n';
-    std::cout << std::setfill('-') << setw(27) << '\n';
-    outputFile << std::setfill('-') << setw(27) << '\n';
-    std::pair<std::string,std::string> tokenPair;
-    // Logic here is, get the vectors size/length. For each vector, have that token object, return a pair of strings, which is the lexeme and tokenType, to cout for the file and command line.
-    for (int i = 0; i < scan.getTokensLength(); i++) {
-      tokenPair = scan.outputToken(i);
-      std::cout << setw(0)<< tokenPair.first << std::setw(20) <<tokenPair.second << '\n';
-      outputFile << setw(0) << tokenPair.first << std::setw(20) <<tokenPair.second << '\n';
-    }
-    inputFile.close();
-    outputFile.close();
-  }
-  else{std::cout << "No Input File Found" << '\n';}
+	cout << endl;
 
-  return 0;
+	ofstream output;
+	output.open(fileOutputName);
+
+	Scanner lex = Scanner::Scanner(fileInputName);
+
+
+	cout << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
+	output << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
+	cout << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
+	output << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
+	while (!lex.iseof())
+	{
+		tkns = lex.lexer();
+		if (tkns.lexeme.at(0) != EOF)
+		{
+			cout << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
+			output << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
+		}
+	}
+
+	return 0;
 }
