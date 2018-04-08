@@ -9,11 +9,13 @@ Project: Assignment 1
 
 #include "scanner.h"
 #include <iomanip>
+#include <cstdlib>
+
 using namespace std;
 
 bool fileExists(std::string fileName)
 {
-	std::ifstream infile(fileName);
+	std::ifstream infile(fileName.c_str());
 	return infile.good();
 }
 
@@ -42,9 +44,9 @@ int main(){
 	cout << endl;
 
 	ofstream output;
-	output.open(fileOutputName);
+	output.open(fileOutputName.c_str());
 
-	Scanner lex = Scanner::Scanner(fileInputName);
+	Scanner lex(fileInputName);
 
 
 	cout << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
