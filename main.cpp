@@ -8,6 +8,7 @@ Project: Assignment 1
 */
 
 #include "scanner.h"
+#include <iomanip>
 using namespace std;
 
 bool fileExists(std::string fileName)
@@ -25,17 +26,20 @@ int main(){
 	std::cout << "Please enter the name of the input file: ";
 	getline(cin, fileInputName);
 
+	cout << endl;
+
 	if (!fileExists(fileInputName))
 	{
-		cout << "File does not exist!";
+		cout << "File does not exist!" << endl << endl;
+		system("pause");
 		exit(0);
 	}
-
-	cout << endl;
 
 	
 	std::cout << "Please enter the name of the output file: ";
 	getline(cin,fileOutputName);
+
+	cout << endl;
 
 	ofstream output;
 	output.open(fileOutputName);
@@ -43,15 +47,17 @@ int main(){
 	Scanner lex = Scanner::Scanner(fileInputName);
 
 
-	cout << "Token\t\t\tLexeme" << endl;
-	output << "Token\t\t\tLexeme" << endl;
+	cout << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
+	output << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
+	cout << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
+	output << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
 	while (!lex.iseof())
 	{
 		tkns = lex.lexer();
-		if (tkns.token.at(0) != EOF)
+		if (tkns.lexeme.at(0) != EOF)
 		{
-			cout << "token: " << tkns.token << "\t\t\tlexeme: " << tkns.lexeme << endl;
-			output << "token: " << tkns.token << "\t\t\tlexeme: " << tkns.lexeme << endl;
+			cout << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
+			output << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
 		}
 	}
 

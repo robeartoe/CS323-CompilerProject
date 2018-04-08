@@ -23,15 +23,13 @@ struct Token {
 class Scanner {
 	private:
 		std::ifstream input;
-		std::vector<std::string> keywords{ "int", "boolean", "real", "if", "endif", "else", "return", "put", "get", "while", "true", "false" };
-		bool Scanner::isUnrecognized(char a);
+		std::vector<std::string> keywords{ "int", "boolean", "real", "if", "endif", "else", "return", "put", "get", "while", "true", "false", "function" };
+		std::vector<std::string> operators{"+", "-", "*", "/", "<", ">", "=", "=>", "=<", "==", "^="};
+		std::vector<std::string> separators{";", ":", ",", "{", "}", "(", ")", "[", "]", "%%"};
 		bool Scanner::isOpSepChar(char a);
-		bool Scanner::isSpecNextChar(char a, char b);
-		bool Scanner::isSpecChar(char a, char b);
-		bool Scanner::isKeyword(std::string tkn);
-		Token Scanner::intRealFSM(std::string tkn);
-		Token Scanner::idFSM(std::string tkn);
-		Token Scanner::opSepCheck(std::string tkn);
+		bool Scanner::isKeyword(std::string lex);
+		bool Scanner::isOperator(std::string lex);
+		bool Scanner::isSeparator(std::string lex);
 
 	public:
 		Scanner::Scanner(std::string fileName);
