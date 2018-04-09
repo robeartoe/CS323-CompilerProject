@@ -8,6 +8,7 @@ Project: Assignment 1
 */
 
 #include "parser.h"
+#include <iomanip>
 using namespace std;
 
 Parser::Parser(string fileIn, string fileOut){
@@ -15,7 +16,7 @@ Parser::Parser(string fileIn, string fileOut){
 	input.open(fileIn);
 	output.open(fileOut);
 
-	test = lexer();
+	testToken = lexer();
 }
 
 /*
@@ -24,7 +25,7 @@ IMPLEMENTATION OF LEXER
 ========================
 */
 
-Token Parser::lexer(){			//lexer fuction
+Token Parser::lexer(){			//lexer function
 
 	string lexeme;	//Strings that will contain data after processing
 	string token;
@@ -32,7 +33,7 @@ Token Parser::lexer(){			//lexer fuction
 
 	char testChar;
 	testChar = input.get();
-	if(testChar = '\n')
+	if(testChar == '\n')
 		lineNum++;
 
 	while (!tokenFound)
@@ -48,12 +49,12 @@ Token Parser::lexer(){			//lexer fuction
 		{
 			do {
 				testChar = input.get();		//proceed to next character inside comment
-				if(testChar = '\n')
+				if(testChar == '\n')
 					lineNum++;
 			} while(testChar != '!');		//iterate through all of comment
 
 			testChar = input.get();			//sets next character to be read
-			if(testChar = '\n')
+			if(testChar == '\n')
 					lineNum++;
 		}
 		else
@@ -61,7 +62,7 @@ Token Parser::lexer(){			//lexer fuction
 		{
 			do {
 				testChar = input.get();
-				if(testChar = '\n')
+				if(testChar == '\n')
 					lineNum++;
 			} while(isspace(testChar));
 		}
@@ -419,19 +420,37 @@ int Parser::currentLine()
 IMPLEMENTATION OF SYNTAX ANALYZER
 ==================================
 */
+void Parser::printToken(Token x)
+{
+	cout << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
+	output << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
+}
+
+void Parser::match(std::string lexeme)
+{
+	if (testToken.lexeme.compare(lexeme) == 0)
+	{
+		testToken = lexer();
+	}
+	else
+		cout << "Error: Expected " << lexeme << " in line " << lineNum;
+}
+
 
 void Parser::R18S() {
 
 	if (printRules)
 	{
-		cout << "<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
-		output << "<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
+		printToken(testToken);
+		cout << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
+		output << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
 	}
 
 	OFD();
 	
-	if (lexer().lexeme.compare("%%") == 0)
+	if (testToken.lexeme.compare("%%") == 0)
 	{
+		match("%%");
 		//ODL();
 		//SL();
 	}
@@ -448,20 +467,19 @@ void Parser::OFD() {
 
 	if (printRules)
 	{
-		cout << "<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
-		output << "<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
+		cout << "\t<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
+		output << "\t<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
 	}
 
 	FD();
-
 }
 
 void Parser::FD() {
 	
 	if (printRules)
 	{
-		cout << "<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
-		output << "<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
+		cout << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
+		output << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
 	}
 
 

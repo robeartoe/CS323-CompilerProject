@@ -34,18 +34,18 @@ class Parser {
 
 		int lineNum = 1;
 
-		Token test;
-
 		bool isOpSepChar(char a);
 		bool isKeyword(std::string lex);
 		bool isOperator(std::string lex);
 		bool isSeparator(std::string lex);
 
+		void Parser::printToken(Token x);
 		void Parser::match(std::string lexeme);
 		void Parser::OFD();
 		void Parser::FD();
 
 	public:
+		Token testToken;
 		Parser::Parser(std::string fileIn, std::string fileOut);
 		Token lexer();
 		bool iseof();

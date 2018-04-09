@@ -43,9 +43,6 @@ int main(){
 
 	cout << endl;
 
-	ofstream output;
-	output.open(fileOutputName.c_str());
-
 	Parser synckr(fileInputName, fileOutputName);
 
 	//Begin Parser
@@ -59,16 +56,3 @@ int main(){
 
 	return 0;
 }
-	/*cout << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
-	output << setw(20) << left << "Token" << setw(20) << "Lexeme" << endl;
-	cout << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
-	output << setw(20) << left << string(5, '=') << setw(20) << string(6, '=') << endl;
-	while (!lex.iseof())
-	{
-		tkns = lex.lexer();
-		if (tkns.lexeme.at(0) != EOF)
-		{
-			cout << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
-			output << setw(20) << tkns.token << setw(20) << left << tkns.lexeme << endl;
-		}
-	}*/
