@@ -431,9 +431,21 @@ void Parser::match(std::string lexeme)
 	if (testToken.lexeme.compare(lexeme) == 0)
 	{
 		testToken = lexer();
+		printToken(testToken);
 	}
 	else
 		cout << "Error: Expected " << lexeme << " in line " << lineNum;
+}
+
+void Parser::matchType(std::string tok)
+{
+	if (testToken.token.compare(tok) == 0)
+	{
+		testToken = lexer();
+		printToken(testToken);
+	}
+	else
+		cout << "Error: Expected a(n) " << tok << " in line " << lineNum;
 }
 
 
@@ -451,8 +463,8 @@ void Parser::R18S() {
 	if (testToken.lexeme.compare("%%") == 0)
 	{
 		match("%%");
-		//ODL();
-		//SL();
+		ODL();
+		SL();
 	}
 	else
 	{
@@ -471,7 +483,12 @@ void Parser::OFD() {
 		output << "\t<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
 	}
 
-	FD();
+	if (testToken.lexeme.compare("function") == 0)
+	{
+		FD();
+	}
+	else
+		return;
 }
 
 void Parser::FD() {
@@ -482,6 +499,258 @@ void Parser::FD() {
 		output << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
 	}
 
+	F();
+	FDpr();
+}
 
+void Parser::FDpr() {
+	
+	FD();
 
+}
+
+void Parser::F() {
+	
+	if (printRules)
+	{
+		cout << "\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>" << endl;
+		output << "\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>" << endl;
+	}
+
+	//if (testToken.lexeme.compare("function") == 0)
+	//{
+		match("function");
+		matchType("identifier");
+		match("[");
+		OPL();
+		match("]");
+		ODL();
+		B();
+	//}
+
+}
+
+void Parser::OPL() {
+	
+	if (printRules)
+	{
+		cout << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>" << endl;
+		output << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>" << endl;
+	}
+
+	if (testToken.token.compare("identifier") == 0)
+		PL();
+	else
+		return;
+	
+}
+
+void Parser::PL() {
+	
+	if (printRules)
+	{
+		cout << "\t<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>" << endl;
+		output << "\t<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>" << endl;
+	}
+
+	P();
+	PLpr();
+
+}
+
+void Parser::PLpr() {
+
+	//if (testToken.lexeme.compare(",") == 0)
+	//{
+		match(",");
+		PL();
+	//}
+	//else
+		return;
+}
+
+void Parser::P() {
+	
+	if (printRules)
+	{
+		cout << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
+		output << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
+	}
+	
+	IDS();
+
+	if (testToken.lexeme.compare(":") == 0)
+	{
+		match(":");
+		Q();
+	}
+
+}
+
+void Parser::Q() {
+	
+	if (printRules)
+	{
+		cout << "\t<Qualifier> ::= int | boolean | real " << endl;
+		output << "\t<Qualifier> ::= int | boolean | real " << endl;
+	}
+
+	if(testToken.lexeme.compare("int") == 0)
+		match("int");
+	else
+	if(testToken.lexeme.compare("boolean") == 0)
+		match("boolean");
+	else
+	if(testToken.lexeme.compare("real") == 0)
+		match("real");
+
+}
+
+void Parser::B() {
+
+	if (printRules)
+	{
+		cout << "\t<Body>  ::=  {  < Statement List>  }" << endl;
+		output << "\t<Body>  ::=  {  < Statement List>  }" << endl;
+	}
+	
+	if (testToken.lexeme.compare("{") == 0)
+	{
+		match("{");
+		SL();
+		match("}");
+	}
+}
+
+void Parser::ODL() {
+	
+	if (printRules)
+	{
+		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
+		output << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
+	}
+
+	if(testToken.lexeme.compare("int") == 0 || testToken.lexeme.compare("boolean") == 0 || testToken.lexeme.compare("boolean") == 0)
+		DL();
+	else
+		return;
+}
+
+void Parser::DL(){
+	
+	if (printRules)
+	{
+		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
+		output << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
+	}
+
+	D();
+
+	if (testToken.lexeme.compare(";") == 0)
+	{
+		match(";");
+		DLpr();
+	}
+
+}
+
+void Parser::DLpr()
+{
+}
+
+void Parser::D()
+{
+}
+
+void Parser::IDS()
+{
+	
+}
+
+void Parser::IDSpr()
+{
+}
+
+void Parser::SL()
+{
+}
+
+void Parser::SLpr()
+{
+}
+
+void Parser::S()
+{
+}
+
+void Parser::CMP()
+{
+}
+
+void Parser::A()
+{
+}
+
+void Parser::I()
+{
+}
+
+void Parser::Ipr()
+{
+}
+
+void Parser::R()
+{
+}
+
+void Parser::Rpr()
+{
+}
+
+void Parser::PR()
+{
+}
+
+void Parser::SC()
+{
+}
+
+void Parser::W()
+{
+}
+
+void Parser::CND()
+{
+}
+
+void Parser::RLP()
+{
+}
+
+void Parser::E()
+{
+}
+
+void Parser::Epr()
+{
+}
+
+void Parser::T()
+{
+}
+
+void Parser::Tpr()
+{
+}
+
+void Parser::FA()
+{
+}
+
+void Parser::PMY()
+{
+}
+
+void Parser::EMP()
+{
 }

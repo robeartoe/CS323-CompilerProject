@@ -41,8 +41,44 @@ class Parser {
 
 		void Parser::printToken(Token x);
 		void Parser::match(std::string lexeme);
+		void Parser::matchType(std::string tok);
 		void Parser::OFD();
 		void Parser::FD();
+		void Parser::FDpr();
+		void Parser::F();
+		void Parser::OPL();
+		void Parser::PL();
+		void Parser::PLpr();
+		void Parser::P();
+		void Parser::Q();
+		void Parser::B();
+		void Parser::ODL();
+		void Parser::DL();
+		void Parser::DLpr();
+		void Parser::D();
+		void Parser::IDS();
+		void Parser::IDSpr();
+		void Parser::SL();
+		void Parser::SLpr();
+		void Parser::S();
+		void Parser::CMP();
+		void Parser::A();
+		void Parser::I();
+		void Parser::Ipr();
+		void Parser::R();
+		void Parser::Rpr();
+		void Parser::PR();
+		void Parser::SC();
+		void Parser::W();
+		void Parser::CND();
+		void Parser::RLP();
+		void Parser::E();
+		void Parser::Epr();
+		void Parser::T();
+		void Parser::Tpr();
+		void Parser::FA();
+		void Parser::PMY();
+		void Parser::EMP();
 
 	public:
 		Token testToken;
