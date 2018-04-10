@@ -14,7 +14,7 @@
 	DL'		-> 	DL | Emp
 12) D		-> 	Q IDS
 13)	IDS		-> 	id IDS'
-	IDS'	-> 	IDS | Emp
+	IDS'	-> 	, IDS | Emp
 14)	SL		-> 	S SL'
 	SL' 	-> 	SL | Emp
 15)	S		->	CMP | A | I | R | PR | SC | W
@@ -34,5 +34,6 @@
 26)	T		->	FA T'
 	T'		->	* FA T' | / FA T' | Emp
 27)	FA		->	- PMY | PMY
-28) PMY		-> id | int | id ( IDS ) | ( E ) | real | true | false
-29	Emp		-> Eps
+28) PMY		-> 	int | id PMY' | ( E ) | real | true | false | Emp
+	PMY'	-> 	( IDS ) | Emp
+29	Emp		-> 	Eps
