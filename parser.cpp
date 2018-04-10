@@ -450,8 +450,7 @@ void Parser::matchType(std::string tok)
 
 void Parser::R18S() {
 
-	if (printRules)
-	{
+	if (printRules){
 		printToken(testToken);
 		cout << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
 		output << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
@@ -459,14 +458,12 @@ void Parser::R18S() {
 
 	OFD();
 
-	if (testToken.lexeme.compare("%%") == 0)
-	{
+	if (testToken.lexeme.compare("%%") == 0){
 		match("%%");
 		ODL();
 		SL();
 	}
-	else
-	{
+	else{
 		cout << "Error: Expected %% in line " << lineNum;
 		output << "Error: Expected %% in line " << lineNum;
 	}
@@ -559,12 +556,12 @@ void Parser::PL() {
 
 void Parser::PLpr() {
 
-	//if (testToken.lexeme.compare(",") == 0)
-	//{
+	if (testToken.lexeme.compare(",") == 0)
+	{
 		match(",");
 		PL();
-	//}
-	//else
+	}
+	else
 		return;
 }
 
@@ -661,8 +658,8 @@ void Parser::DLpr()
 void Parser::D()
 {
 	if (printRules) {
-		cout << "\t"<<endl;
-		output << "\t"<<endl;
+		cout << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
+		output << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
 	}
 
 }
@@ -670,13 +667,25 @@ void Parser::D()
 void Parser::IDS()
 {
 	if (printRules) {
-		cout << "\t"<<endl;
-		output << "\t"<<endl;
+		cout << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
+		output << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
+	}
+	if (testToken.token.compare("identifier") == 0)
+	{
+		matchType(testToken.token);
+		IDSpr();
 	}
 }
 
 void Parser::IDSpr()
 {
+	if (testToken.lexeme.compare(":")==0)
+	{
+		return;
+	}
+	match(",");
+	IDS();
+	return;
 }
 
 void Parser::SL()
@@ -685,11 +694,19 @@ void Parser::SL()
 		cout <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
 		output <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
 	}
-
+	S();
+	SLpr();
 }
 
 void Parser::SLpr()
 {
+	if (testToken.lexeme.compare(";") == 0)
+	{
+		return;
+	}
+	match(",");
+	SL();
+	return;
 }
 
 void Parser::S()
@@ -697,6 +714,26 @@ void Parser::S()
 	if (printRules) {
 		cout<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
 		output<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
+	}
+
+	if (testToken.lexeme.compare("return")==0){
+		R();
+	}
+	if (testToken.lexeme.compare("{") == 0) {
+
+	}
+	if (testToken.token.compare("identifier") == 0) {
+
+	}
+	if (testToken.lexeme.compare("p") == 0) {
+
+	}
+	if (testToken.lexeme.compare("g") == 0) {
+
+	}
+	if (testToken.lexeme.compare("while")==0)
+	{
+
 	}
 }
 
@@ -719,15 +756,14 @@ void Parser::A()
 void Parser::I()
 {
 	if (printRules) {
-		cout << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |
-                          if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
-		output << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |
-                          if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
+		cout << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    | if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
+		output << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
 	}
 }
 
 void Parser::Ipr()
 {
+
 }
 
 void Parser::R()
@@ -736,10 +772,17 @@ void Parser::R()
 		cout << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
 		output << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
 	}
+	Rpr();
 }
 
 void Parser::Rpr()
 {
+	if (testToken.lexeme.compare(";") == 0) {
+		return;
+	}
+	E();
+	match(";");
+
 }
 
 void Parser::PR()
@@ -769,10 +812,8 @@ void Parser::W()
 void Parser::CND()
 {
 	if (printRules) {
-		cout << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>
-"<<endl;
-		output << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>
-"<<endl;
+		cout << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>"<<endl;
+		output << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>"<<endl;
 	}
 }
 
