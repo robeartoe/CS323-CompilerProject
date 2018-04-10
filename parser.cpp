@@ -4,7 +4,7 @@ Names:	Stephen Shinn
 Michael Perna
 Robert Ruiz
 
-Project: Assignment 1
+Project: Assignment 2
 */
 
 #include "parser.h"
@@ -12,7 +12,6 @@ Project: Assignment 1
 using namespace std;
 
 Parser::Parser(string fileIn, string fileOut){
-	
 	input.open(fileIn);
 	output.open(fileOut);
 
@@ -338,7 +337,7 @@ Token Parser::lexer(){			//lexer function
 			tokenFound = true;
 		}
 		else
-		{	
+		{
 			lexeme.push_back(testChar);
 			token = "unrecognized";
 			tokenFound = true;
@@ -369,7 +368,7 @@ bool Parser::isOpSepChar(char a)
 		//Special Case Characters
 		case '=':
 		case '^':
-		case '%': 
+		case '%':
 			return true;
 		default:
 			break;
@@ -459,7 +458,7 @@ void Parser::R18S() {
 	}
 
 	OFD();
-	
+
 	if (testToken.lexeme.compare("%%") == 0)
 	{
 		match("%%");
@@ -471,7 +470,7 @@ void Parser::R18S() {
 		cout << "Error: Expected %% in line " << lineNum;
 		output << "Error: Expected %% in line " << lineNum;
 	}
-		
+
 
 };
 
@@ -492,7 +491,7 @@ void Parser::OFD() {
 }
 
 void Parser::FD() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
@@ -504,13 +503,13 @@ void Parser::FD() {
 }
 
 void Parser::FDpr() {
-	
+
 	FD();
 
 }
 
 void Parser::F() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>" << endl;
@@ -531,7 +530,7 @@ void Parser::F() {
 }
 
 void Parser::OPL() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>" << endl;
@@ -542,11 +541,11 @@ void Parser::OPL() {
 		PL();
 	else
 		return;
-	
+
 }
 
 void Parser::PL() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>" << endl;
@@ -570,13 +569,13 @@ void Parser::PLpr() {
 }
 
 void Parser::P() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
 		output << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
 	}
-	
+
 	IDS();
 
 	if (testToken.lexeme.compare(":") == 0)
@@ -588,7 +587,7 @@ void Parser::P() {
 }
 
 void Parser::Q() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Qualifier> ::= int | boolean | real " << endl;
@@ -613,7 +612,7 @@ void Parser::B() {
 		cout << "\t<Body>  ::=  {  < Statement List>  }" << endl;
 		output << "\t<Body>  ::=  {  < Statement List>  }" << endl;
 	}
-	
+
 	if (testToken.lexeme.compare("{") == 0)
 	{
 		match("{");
@@ -623,7 +622,7 @@ void Parser::B() {
 }
 
 void Parser::ODL() {
-	
+
 	if (printRules)
 	{
 		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
@@ -637,7 +636,7 @@ void Parser::ODL() {
 }
 
 void Parser::DL(){
-	
+
 	if (printRules)
 	{
 		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
@@ -656,15 +655,24 @@ void Parser::DL(){
 
 void Parser::DLpr()
 {
+
 }
 
 void Parser::D()
 {
+	if (printRules) {
+		cout << "\t"<<endl;
+		output << "\t"<<endl;
+	}
+
 }
 
 void Parser::IDS()
 {
-	
+	if (printRules) {
+		cout << "\t"<<endl;
+		output << "\t"<<endl;
+	}
 }
 
 void Parser::IDSpr()
@@ -673,6 +681,11 @@ void Parser::IDSpr()
 
 void Parser::SL()
 {
+	if (printRules) {
+		cout <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
+		output <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
+	}
+
 }
 
 void Parser::SLpr()
@@ -681,18 +694,36 @@ void Parser::SLpr()
 
 void Parser::S()
 {
+	if (printRules) {
+		cout<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
+		output<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
+	}
 }
 
 void Parser::CMP()
 {
+	if (printRules) {
+		cout << "\t<Compound> ::=   {  <Statement List>  } "<<endl;
+		output << "\t<Compound> ::=   {  <Statement List>  } "<<endl;
+	}
 }
 
 void Parser::A()
 {
+	if (printRules) {
+		cout << "\t<Assign> ::=     <Identifier> = <Expression> ;"<<endl;
+		output << "\t<Assign> ::=     <Identifier> = <Expression> ;"<<endl;
+	}
 }
 
 void Parser::I()
 {
+	if (printRules) {
+		cout << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |
+                          if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
+		output << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |
+                          if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
+	}
 }
 
 void Parser::Ipr()
@@ -701,6 +732,10 @@ void Parser::Ipr()
 
 void Parser::R()
 {
+	if (printRules) {
+		cout << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
+		output << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
+	}
 }
 
 void Parser::Rpr()
@@ -709,26 +744,52 @@ void Parser::Rpr()
 
 void Parser::PR()
 {
+	if (printRules) {
+		cout << "\t<Print> ::=    put ( <Expression>);"<<endl;
+		output << "\t<Print> ::=    put ( <Expression>);"<<endl;
+	}
 }
 
 void Parser::SC()
 {
+	if (printRules) {
+		cout << "\t<Scan> ::=    get ( <IDs> );"<<endl;
+		output << "\t<Scan> ::=    get ( <IDs> );"<<endl;
+	}
 }
 
 void Parser::W()
 {
+	if (printRules) {
+		cout << "\t<While> ::=  while ( <Condition>  )  <Statement> "<<endl;
+		output << "\t<While> ::=  while ( <Condition>  )  <Statement> "<<endl;
+	}
 }
 
 void Parser::CND()
 {
+	if (printRules) {
+		cout << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>
+"<<endl;
+		output << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>
+"<<endl;
+	}
 }
 
 void Parser::RLP()
 {
+	if (printRules) {
+		cout << "\t<Relop> ::=  ==   |   ^=    |   >     |   <    |   =>    |   =<          "<<endl;
+		output << "\t <Relop> ::= ==   |   ^=    |   >     |   <    |   =>    |   =<          "<<endl;
+	}
 }
 
 void Parser::E()
 {
+	if (printRules) {
+		cout << "\t<Expression>  ::= <Expression> + <Term>    | <Expression>  - <Term>    |    <Term>"<<endl;
+		output << "\t<Expression>  ::= <Expression> + <Term>    | <Expression>  - <Term>    |    <Term>"<<endl;
+	}
 }
 
 void Parser::Epr()
@@ -737,20 +798,37 @@ void Parser::Epr()
 
 void Parser::T()
 {
+	if (printRules) {
+		cout << "\t<Term>    ::=   <Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>"<<endl;
+		output << "\t<Term>    ::=   <Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>"<<endl;
+	}
 }
 
 void Parser::Tpr()
 {
+
 }
 
 void Parser::FA()
 {
+	if (printRules) {
+		cout << "\t<Factor> ::= -  <Primary>    |    <Primary>"<<endl;
+		output << "\t<Factor> ::= -  <Primary>    |    <Primary>"<<endl;
+	}
 }
 
 void Parser::PMY()
 {
+	if (printRules) {
+		cout << "\t<Primary> ::= <Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |  <Real>  |   true   |  false "<<endl;
+		output << "\t<Primary> ::= <Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |  <Real>  |   true   |  false "<<endl;
+	}
 }
 
 void Parser::EMP()
 {
+	if (printRules) {
+		cout << "\t"<<endl;
+		output << "\t"<<endl;
+	}
 }

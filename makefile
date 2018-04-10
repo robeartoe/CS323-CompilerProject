@@ -1,7 +1,5 @@
 run:
-	g++ -o run main.cpp token.cpp scanner.cpp
+	g++ -o run main.cpp parser.cpp
 
 clean:
 	rm run
-
-
