@@ -1,0 +1,38 @@
+1) 	R18S	-> 	OFD %% ODL SL
+2) 	OFD		-> 	FD | Emp
+3) 	FD		-> 	F FD'
+	FD'		-> 	FD | Emp
+4)	F		-> 	f id [ OPL ] ODL B
+5)	OPL		-> 	PL | Emp
+6)	PL		-> 	P PL'
+	PL'		-> 	, PL | Emp
+7)	P		-> 	IDS : Q
+8)	Q		-> 	i | b | r
+9)	B		-> 	{ SL }
+10)	ODL		-> 	DL | Emp
+11)	DL		-> 	D ; DL'
+	DL'		-> 	DL | Emp
+12) D		-> 	Q IDS
+13)	IDS		-> 	id IDS'
+	IDS'	-> 	IDS | Emp
+14)	SL		-> 	S SL'
+	SL' 	-> 	SL | Emp
+15)	S		->	CMP | A | I | R | PR | SC | W
+16)	CMP		->	{ SL }
+17)	A		->	id = E
+18) I		->	if ( CND ) S I'
+	I'		->	endif | else S endif
+19)	R		->	r R'
+	R'		->	; | E ;
+20) PR		->	p ( E ) ;
+21)	SC		->	g ( IDS ) ;
+22) W		->	w ( CND ) S
+23) CND		->	E RLP E
+24)	RLP		->	== | ^= | > | < | => | =<
+25)	E		->	T E'
+	E'		->	+ T E' | - T E' | Emp
+26)	T		->	FA T'
+	T'		->	* FA T' | / FA T' | Emp
+27)	FA		->	- PMY | PMY
+28) PMY		-> id | int | id ( IDS ) | ( E ) | real | true | false
+29	Emp		-> Eps
