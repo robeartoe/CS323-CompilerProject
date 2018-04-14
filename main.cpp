@@ -45,23 +45,11 @@ int main(){
 
 
 	Parser synckr(fileInputName, fileOutputName);
-	/*
-	Token test;
 
-	while (!synckr.iseof())
-	{
-		test = synckr.lexer();
-		synckr.printToken(test);
-	}
-	*/
-	//Begin Parser
 	synckr.R18S();
 
 	//If last token is EOF, parsing successful
-	if(synckr.lexer().lexeme.at(0) == EOF)
-		cout << "Parsing was successful";
-	else
-		cout << "End of File.";
+	synckr.parseMsg();
 
 	return 0;
 }

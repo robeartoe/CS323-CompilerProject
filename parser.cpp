@@ -404,7 +404,7 @@ bool Parser::isSeparator(string lex)
 
 bool Parser::iseof()
 {
-	if (input.peek() == EOF)
+	if (cmpTok("EOF"))
 		return true;
 	else
 		return false;
@@ -453,7 +453,8 @@ void Parser::matchLex(std::string lx)
 	if (cmpLex(lx))
 	{
 		testToken = lexer();
-		printToken(testToken);
+		if(!cmpTok("EOF"))
+			printToken(testToken);
 	}
 	else
 	{
@@ -466,7 +467,8 @@ void Parser::matchTok(std::string tok)
 	if (cmpTok(tok))
 	{
 		testToken = lexer();
-		printToken(testToken);
+		if(!cmpTok("EOF"))
+			printToken(testToken);
 	}
 	else
 	{
@@ -507,7 +509,7 @@ void Parser::R18S()
 	else
 		errorLex("%%");
 
-}
+};
 
 void Parser::OFD() 
 {
@@ -516,6 +518,8 @@ void Parser::OFD()
 
 	if(cmpLex("function"))
 		FD();
+
+	EMP();
 }
 
 void Parser::FD() 
@@ -534,6 +538,8 @@ void Parser::FDpr()
 
 	if(cmpLex("function"))
 		FD();
+
+	EMP();
 }
 
 void Parser::F() 
@@ -564,9 +570,10 @@ void Parser::OPL()
 		printProduction("<Opt Parameter List> ::= <Parameter List> | <Empty>");
 
 	if (cmpTok("identifier"))
-	{
 		PL();
-	}
+
+	EMP();
+
 }
 
 void Parser::PL() 
@@ -576,6 +583,7 @@ void Parser::PL()
 
 	P();
 	PLpr();
+	EMP();
 }
 
 void Parser::PLpr() 
@@ -655,9 +663,9 @@ void Parser::ODL()
 	if (cmpLex("int") ||
 		cmpLex("boolean") ||
 		cmpLex("real"))
-	{
 		DL();
-	}
+
+	EMP();
 }
 
 void Parser::DL()
@@ -670,7 +678,7 @@ void Parser::DL()
 	if (cmpLex(";"))
 	{
 		matchLex(";");
-		DL();
+		DLpr();
 	}
 	else
 		errorLex(";");
@@ -686,9 +694,9 @@ void Parser::DLpr()
 	if (cmpLex("int") ||
 		cmpLex("boolean") ||
 		cmpLex("real"))
-	{
 		DL();
-	}
+	
+	EMP();
 }
 
 void Parser::D()
@@ -710,6 +718,8 @@ void Parser::IDS()
 		matchTok("identifier");
 		IDSpr();
 	}
+	else
+		errorTok("identifier");
 }
 
 void Parser::IDSpr()
@@ -722,6 +732,8 @@ void Parser::IDSpr()
 		matchLex(",");
 		IDS();
 	}
+
+	EMP();
 }
 
 void Parser::SL()
@@ -745,9 +757,9 @@ void Parser::SLpr()
 		cmpLex("put") ||
 		cmpLex("get") ||
 		cmpLex("while"))
-	{
 		SL();
-	}
+	
+	EMP();
 }
 
 void Parser::S()
@@ -1004,7 +1016,7 @@ void Parser::Epr()
 
 	if (cmpLex("+"))
 	{
-		matchLex("*");
+		matchLex("+");
 		T();
 		Epr();
 	}
@@ -1016,7 +1028,7 @@ void Parser::Epr()
 		Epr();
 	}
 
-	return;
+	EMP();
 }
 
 void Parser::T()
@@ -1047,7 +1059,7 @@ void Parser::Tpr()
 		Tpr();
 	}
 
-	return;
+	EMP();
 }
 
 void Parser::FA()
@@ -1070,12 +1082,12 @@ void Parser::PMY()
 		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
 
 	
-	if( cmpTok("integer")			||
+	if( cmpTok("integer")		||
 		cmpTok("real")			|| 
-		cmpTok("true")			||
-		cmpTok("false")			||
+		cmpLex("true")			||
+		cmpLex("false")			||
 		cmpTok("identifier")	||
-		cmpLex("("))
+		cmpLex("(") )
 	{ 
 	
 		if (cmpTok("integer"))
@@ -1085,17 +1097,17 @@ void Parser::PMY()
 		else
 		if (cmpTok("real"))
 		{
-			matchTok("real");
+			matchLex("real");
 		}
 		else
-		if (cmpTok("true"))
+		if (cmpLex("true"))
 		{
-			matchTok("true");
+			matchLex("true");
 		}
 		else
-		if (cmpTok("false"))
+		if (cmpLex("false"))
 		{
-			matchTok("false");
+			matchLex("false");
 		}
 		else
 		if (cmpTok("identifier"))
@@ -1143,7 +1155,7 @@ void Parser::PMYpr()
 
 	}
 
-	return;
+	EMP();
 }
 
 void Parser::EMP()
@@ -1152,4 +1164,18 @@ void Parser::EMP()
 		printProduction("<Empty> ::= Epsilon");
 
 	return;
+}
+
+void Parser::parseMsg()
+{
+	if (iseof())
+	{
+		cout << "Parsing completed successfully." << endl;
+		output << "Parsing completed successfully." << endl;
+	}
+	else
+	{
+		cout << "End of file." << endl;
+		output << "End of file." << endl;
+	}
 }
