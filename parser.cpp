@@ -507,7 +507,7 @@ void Parser::R18S()
 	else
 		errorLex("%%");
 
-};
+}
 
 void Parser::OFD() 
 {
