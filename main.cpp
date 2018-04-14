@@ -3,7 +3,8 @@ CPSC 323-02
 Names:	Stephen Shinn
 		Michael Perna
 		Robert Ruiz
-Project: Assignment 2
+
+Project: Assignment 1
 */
 
 #include "parser.h"
@@ -19,26 +20,40 @@ bool fileExists(std::string fileName)
 }
 
 int main(){
+
 	string fileInputName,fileOutputName;	// File Handles to be Processed
 	Token tkns;
+
 
 	std::cout << "Please enter the name of the input file: ";
 	getline(cin, fileInputName);
 
 	cout << endl;
 
-	if (!fileExists(fileInputName)){
+	if (!fileExists(fileInputName))
+	{
 		cout << "File does not exist!" << endl << endl;
 		system("pause");
 		exit(0);
 	}
 
+	
 	std::cout << "Please enter the name of the output file: ";
 	getline(cin,fileOutputName);
+
 	cout << endl;
 
-	Parser synckr(fileInputName, fileOutputName);
 
+	Parser synckr(fileInputName, fileOutputName);
+	/*
+	Token test;
+
+	while (!synckr.iseof())
+	{
+		test = synckr.lexer();
+		synckr.printToken(test);
+	}
+	*/
 	//Begin Parser
 	synckr.R18S();
 

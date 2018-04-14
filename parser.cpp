@@ -4,7 +4,7 @@ Names:	Stephen Shinn
 Michael Perna
 Robert Ruiz
 
-Project: Assignment 2
+Project: Assignment 1
 */
 
 #include "parser.h"
@@ -12,10 +12,9 @@ Project: Assignment 2
 using namespace std;
 
 Parser::Parser(string fileIn, string fileOut){
+	
 	input.open(fileIn);
 	output.open(fileOut);
-
-	testToken = lexer();
 }
 
 /*
@@ -59,6 +58,8 @@ Token Parser::lexer(){			//lexer function
 		else
 		if(isspace(testChar))				//proceed through all whitespace
 		{
+			if(testChar == '\n')
+					lineNum++;
 			do {
 				testChar = input.get();
 				if(testChar == '\n')
@@ -337,7 +338,7 @@ Token Parser::lexer(){			//lexer function
 			tokenFound = true;
 		}
 		else
-		{
+		{	
 			lexeme.push_back(testChar);
 			token = "unrecognized";
 			tokenFound = true;
@@ -368,7 +369,7 @@ bool Parser::isOpSepChar(char a)
 		//Special Case Characters
 		case '=':
 		case '^':
-		case '%':
+		case '%': 
 			return true;
 		default:
 			break;
@@ -425,451 +426,726 @@ void Parser::printToken(Token x)
 	output << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
 }
 
-void Parser::match(std::string lexeme)
+void Parser::printProduction(std::string rule)
 {
-	if (testToken.lexeme.compare(lexeme) == 0)
+	cout << "\t" << rule << endl;
+	output << "\t" << rule << endl;
+}
+
+bool Parser::cmpLex(std::string inp)
+{
+	if(testToken.lexeme.compare(inp) == 0)
+		return true;
+	else
+		return false;
+}
+
+bool Parser::cmpTok(std::string inp)
+{
+	if(testToken.token.compare(inp) == 0)
+		return true;
+	else
+		return false;
+}
+
+void Parser::matchLex(std::string lx)
+{
+	if (cmpLex(lx))
 	{
 		testToken = lexer();
 		printToken(testToken);
 	}
 	else
-		cout << "Error: Expected " << lexeme << " in line " << lineNum;
+	{
+		errorLex(lx);
+	}
 }
 
-void Parser::matchType(std::string tok)
+void Parser::matchTok(std::string tok)
 {
-	if (testToken.token.compare(tok) == 0)
+	if (cmpTok(tok))
 	{
 		testToken = lexer();
 		printToken(testToken);
 	}
 	else
-		cout << "Error: Expected a(n) " << tok << " in line " << lineNum;
+	{
+		errorTok(tok);
+	}
+}
+
+void Parser::errorLex(std::string tok)
+{
+	cout << "Error: Expected '" << tok << "' in line " << lineNum;
+	output << "Error: Expected '" << tok << "' in line " << lineNum;
+	exit(0);
+}
+
+void Parser::errorTok(std::string tok)
+{
+	cout << "Error: Expected " << tok << " in line " << lineNum;
+	output << "Error: Expected " << tok << " in line " << lineNum;
+	exit(0);
 }
 
 
-void Parser::R18S() {
+void Parser::R18S() 
+{
+	testToken = lexer();
+	printToken(testToken);
 
-	if (printRules){
-		printToken(testToken);
-		cout << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
-		output << "\t<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>" << endl;
-	}
+	if(printRules)
+		printProduction("<Rat18S> ::= <Opt Function Definitions> %% <Opt Declaration List> <Statement List>");
 
 	OFD();
-
-	if (testToken.lexeme.compare("%%") == 0){
-		match("%%");
+	if (cmpLex("%%"))
+	{
+		matchLex("%%");
 		ODL();
 		SL();
 	}
-	else{
-		cout << "Error: Expected %% in line " << lineNum;
-		output << "Error: Expected %% in line " << lineNum;
-	}
-
+	else
+		errorLex("%%");
 
 };
 
-void Parser::OFD() {
+void Parser::OFD() 
+{
+	if(printRules)
+		printProduction("<Opt Function Definitions> ::= <Function Definitions> | <Empty>");
 
-	if (printRules)
-	{
-		cout << "\t<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
-		output << "\t<Opt Function Definitions> ::= <Function Definitions> | <Empty>" << endl;
-	}
-
-	if (testToken.lexeme.compare("function") == 0)
-	{
+	if(cmpLex("function"))
 		FD();
-	}
-	else
-		return;
 }
 
-void Parser::FD() {
-
-	if (printRules)
-	{
-		cout << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
-		output << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>" << endl;
-	}
+void Parser::FD() 
+{
+	if(printRules)
+		printProduction("<Function Definitions> ::= <Function> <Function Definitions>'");
 
 	F();
 	FDpr();
 }
 
-void Parser::FDpr() {
+void Parser::FDpr() 
+{
+	if(printRules)
+		printProduction("<Function Declaration>' ::= <Function Declaration> | <Empty>");
 
-	FD();
-
+	if(cmpLex("function"))
+		FD();
 }
 
-void Parser::F() {
+void Parser::F() 
+{
+	if(printRules)
+		printProduction("<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List>  <Body>");
 
-	if (printRules)
+
+	if (cmpLex("function"))
 	{
-		cout << "\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>" << endl;
-		output << "\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>" << endl;
-	}
-
-	//if (testToken.lexeme.compare("function") == 0)
-	//{
-		match("function");
-		matchType("identifier");
-		match("[");
+		matchLex("function");
+		matchTok("identifier");
+		matchLex("[");
 		OPL();
-		match("]");
+		matchLex("]");
 		ODL();
 		B();
-	//}
-
-}
-
-void Parser::OPL() {
-
-	if (printRules)
-	{
-		cout << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>" << endl;
-		output << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>" << endl;
 	}
-
-	if (testToken.token.compare("identifier") == 0)
-		PL();
 	else
-		return;
+		errorLex("function");
+	
 
 }
 
-void Parser::PL() {
-
+void Parser::OPL() 
+{
 	if (printRules)
+		printProduction("<Opt Parameter List> ::= <Parameter List> | <Empty>");
+
+	if (cmpLex("identifier"))
 	{
-		cout << "\t<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>" << endl;
-		output << "\t<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>" << endl;
+		PL();
 	}
+}
+
+void Parser::PL() 
+{
+	if(printRules)
+		printProduction("<Parameter List> ::= <Parameter> <Parameter List>'");
 
 	P();
 	PLpr();
-
 }
 
-void Parser::PLpr() {
+void Parser::PLpr() 
+{
+	if(printRules)
+		printProduction("<Parameter List>' ::= , <Parameter List> | <Empty>");
 
-	if (testToken.lexeme.compare(",") == 0)
+	if (cmpLex(","))
 	{
-		match(",");
+		matchLex(",");
 		PL();
 	}
-	else
-		return;
 }
 
-void Parser::P() {
-
-	if (printRules)
-	{
-		cout << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
-		output << "\t<Parameter> ::= <IDs> : <Qualifier>" << endl;
-	}
+void Parser::P() 
+{
+	if(printRules)
+		printProduction("<Parameter> ::= <IDs> : <Qualifier>");
 
 	IDS();
-
-	if (testToken.lexeme.compare(":") == 0)
+	if (cmpLex(":"))
 	{
-		match(":");
+		matchLex(":");
 		Q();
 	}
+	else
+		errorLex(":");
+}
+
+void Parser::Q() 
+{
+	if(printRules)
+		printProduction("<Qualifier> ::= int | boolean | real");
+
+	if (cmpLex("int") ||
+		cmpLex("boolean") ||
+		cmpLex("real"))
+	{
+		if(cmpLex("int"))
+			matchLex("int");
+		else
+		if(cmpLex("boolean"))
+			matchLex("boolean");
+		else
+			matchLex("real");
+	}
+	else
+	{
+		cout << "Error: Expected 'int', 'boolean', or 'real' in line " << lineNum;
+		output << "Error: Expected 'int', 'boolean', or 'real' in line " << lineNum;
+		exit(0);
+	}
 
 }
 
-void Parser::Q() {
+void Parser::B()
+{
+	if(printRules)
+		printProduction("<Body> ::= { <Statement List> }");
 
-	if (printRules)
+	if (cmpLex("{"))
 	{
-		cout << "\t<Qualifier> ::= int | boolean | real " << endl;
-		output << "\t<Qualifier> ::= int | boolean | real " << endl;
-	}
-
-	if(testToken.lexeme.compare("int") == 0)
-		match("int");
-	else
-	if(testToken.lexeme.compare("boolean") == 0)
-		match("boolean");
-	else
-	if(testToken.lexeme.compare("real") == 0)
-		match("real");
-
-}
-
-void Parser::B() {
-
-	if (printRules)
-	{
-		cout << "\t<Body>  ::=  {  < Statement List>  }" << endl;
-		output << "\t<Body>  ::=  {  < Statement List>  }" << endl;
-	}
-
-	if (testToken.lexeme.compare("{") == 0)
-	{
-		match("{");
+		matchLex("{");
 		SL();
-		match("}");
+		matchLex("}");
 	}
-}
-
-void Parser::ODL() {
-
-	if (printRules)
-	{
-		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
-		output << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
-	}
-
-	if(testToken.lexeme.compare("int") == 0 || testToken.lexeme.compare("boolean") == 0 || testToken.lexeme.compare("boolean") == 0)
-		DL();
 	else
-		return;
+		errorLex("{");
+	
 }
 
-void Parser::DL(){
+void Parser::ODL()
+{
+	if(printRules)
+		printProduction("<Opt Declaration List> ::= <Declaration List> | <Empty>");
 
-	if (printRules)
+	if (cmpLex("int") ||
+		cmpLex("boolean") ||
+		cmpLex("real"))
 	{
-		cout << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
-		output << "\t<Opt Declaration List> ::= <Declaration List>   |    <Empty>" << endl;
+		DL();
 	}
+}
 
+void Parser::DL()
+{
+	if(printRules)
+		printProduction("<Declaration List>  ::= <Declaration> ; <Declaration List>'");
+	
+	//if error come back here and fix
 	D();
-
-	if (testToken.lexeme.compare(";") == 0)
+	if (cmpLex(";"))
 	{
-		match(";");
-		DLpr();
+		matchLex(";");
+		DL();
 	}
+	else
+		errorLex(";");
+	
 
 }
 
 void Parser::DLpr()
 {
+	if(printRules)
+		printProduction("<Declaration List>' ::= <Declaration List> | <Empty>");
 
+	if (cmpLex("int") ||
+		cmpLex("boolean") ||
+		cmpLex("real"))
+	{
+		DL();
+	}
 }
 
 void Parser::D()
 {
-	if (printRules) {
-		cout << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
-		output << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Declaration> ::= <Qualifier> <IDs>");
 
+	Q();
+	IDS();
 }
 
 void Parser::IDS()
 {
-	if (printRules) {
-		cout << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
-		output << "\t<IDs> ::=     <Identifier>    | <Identifier>, <IDs>"<<endl;
-	}
-	if (testToken.token.compare("identifier") == 0)
+	if(printRules)
+		printProduction("<IDs> ::= <Identifier> <IDs>'");
+
+	if (cmpTok("identifier"))
 	{
-		matchType(testToken.token);
+		matchTok("identifier");
 		IDSpr();
 	}
 }
 
 void Parser::IDSpr()
 {
-	if (testToken.lexeme.compare(":")==0)
+	if(printRules)
+		printProduction("<IDs>' ::= , <IDs> | <Empty>");
+
+	if (cmpLex(","))
 	{
-		return;
+		matchLex(",");
+		IDS();
 	}
-	match(",");
-	IDS();
-	return;
 }
 
 void Parser::SL()
 {
-	if (printRules) {
-		cout <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
-		output <<"\t<Statement List> ::=   <Statement>   | <Statement> <Statement List>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Statement List> ::= <Statement> <Statement List>'");
+
 	S();
 	SLpr();
 }
 
 void Parser::SLpr()
 {
-	if (testToken.lexeme.compare(";") == 0)
+	if(printRules)
+		printProduction("<Statement List>' ::= <Statement List> | <Empty>");
+
+	if (cmpLex("{") ||
+		cmpTok("identifier") ||
+		cmpLex("if") ||
+		cmpLex("return") ||
+		cmpLex("put") ||
+		cmpLex("get") ||
+		cmpLex("while"))
 	{
-		return;
+		SL();
 	}
-	match(",");
-	SL();
-	return;
 }
 
 void Parser::S()
 {
-	if (printRules) {
-		cout<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
-		output<<"\t<Statement> ::=   <Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Statement> ::= <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>");
 
-	if (testToken.lexeme.compare("return")==0){
-		R();
+	if(	cmpLex("{")				||
+		cmpTok("identifier")	||
+		cmpLex("if")			||
+		cmpLex("return")		||
+		cmpLex("put")			||
+		cmpLex("get")			||
+		cmpLex("while"))
+	{ 
+		if(cmpLex("{"))
+			CMP();
+		else
+		if(cmpTok("identifier"))
+			A();
+		else
+		if(cmpLex("if"))
+			I();
+		else
+		if(cmpLex("return"))
+			R();
+		else
+		if(cmpLex("put"))
+			PR();
+		else
+		if(cmpLex("get"))
+			SC();
+		else
+			W();
 	}
-	if (testToken.lexeme.compare("{") == 0) {
-
-	}
-	if (testToken.token.compare("identifier") == 0) {
-
-	}
-	if (testToken.lexeme.compare("p") == 0) {
-
-	}
-	if (testToken.lexeme.compare("g") == 0) {
-
-	}
-	if (testToken.lexeme.compare("while")==0)
+	else
 	{
-
+		cout << "Error: Incorrect statement format in line " << lineNum;
+		exit(0);
 	}
+
 }
 
 void Parser::CMP()
 {
-	if (printRules) {
-		cout << "\t<Compound> ::=   {  <Statement List>  } "<<endl;
-		output << "\t<Compound> ::=   {  <Statement List>  } "<<endl;
+	if(printRules)
+		printProduction("<Compound> ::= { <Statement List> }");
+
+	if (cmpLex("{"))
+	{
+		matchLex("{");
+		SL();
+		matchLex("}");
 	}
+	else
+		errorLex("{");
 }
 
 void Parser::A()
 {
-	if (printRules) {
-		cout << "\t<Assign> ::=     <Identifier> = <Expression> ;"<<endl;
-		output << "\t<Assign> ::=     <Identifier> = <Expression> ;"<<endl;
+	if(printRules)
+		printProduction("<Assign> ::= <Identifier> = <Expression> ;");
+
+	if (cmpTok("identifier"))
+	{
+		matchTok("identifier");
+		matchLex("=");
+		E();
+		matchLex(";");
 	}
+	else
+		errorTok("identifier");
 }
 
 void Parser::I()
 {
-	if (printRules) {
-		cout << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    | if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
-		output << "\t<If> ::=     if  ( <Condition>  ) <Statement>   endif    |if  ( <Condition>  ) <Statement>   else  <Statement>  endif   "<<endl;
+	if(printRules)
+		printProduction("<If> ::= if ( <Condition> ) <Statement> <If>'");
+
+	if (cmpLex("if"))
+	{
+		matchLex("if");
+		matchLex("(");
+		CND();
+		matchLex(")");
+		S();
+		Ipr();
 	}
+	else
+		errorLex("if");
 }
 
 void Parser::Ipr()
 {
+	if(printRules)
+		printProduction("<If>' ::= endif | else <Statement> endif");
 
+	if(cmpLex("endif"))
+		matchLex("endif");
+	else
+	if (cmpLex("else"))
+	{
+		matchLex("else");
+		S();
+		matchLex("endif");
+	}
+	else
+	{
+		cout << "Error: Expected 'else' or 'endif' in line " << lineNum;
+		output << "Error: Expected 'else' or 'endif' in line " << lineNum;
+		exit(0);
+	}
 }
 
 void Parser::R()
 {
-	if (printRules) {
-		cout << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
-		output << "\t<Return> ::=  return ; |  return <Expression> ;"<<endl;
+	if(printRules)
+		printProduction("<Return> ::= return <Return>'");
+
+	if (cmpLex("return"))
+	{
+		matchLex("return");
+		Rpr();
 	}
-	Rpr();
+	else
+		errorLex("return");
 }
 
 void Parser::Rpr()
 {
-	if (testToken.lexeme.compare(";") == 0) {
-		return;
-	}
-	E();
-	match(";");
+	if(printRules)
+		printProduction("<Return>' ::= ; | <Expression> ;");
 
+	if(cmpLex(";"))
+		matchLex(";");
+	else
+	{
+		E();
+		matchLex(";");
+	}
 }
 
 void Parser::PR()
 {
-	if (printRules) {
-		cout << "\t<Print> ::=    put ( <Expression>);"<<endl;
-		output << "\t<Print> ::=    put ( <Expression>);"<<endl;
+	if(printRules)
+		printProduction("<Print> ::= put ( <Expression> ) ;");
+
+	if (cmpLex("put"))
+	{
+		matchLex("put");
+		matchLex("(");
+		E();
+		matchLex(")");
+		matchLex(";");
 	}
+	else
+		errorLex("put");
 }
 
 void Parser::SC()
 {
-	if (printRules) {
-		cout << "\t<Scan> ::=    get ( <IDs> );"<<endl;
-		output << "\t<Scan> ::=    get ( <IDs> );"<<endl;
+	if(printRules)
+		printProduction("<Scan> ::= get ( <IDs> ) ;");
+
+	if (cmpLex("get")) 
+	{
+		matchLex("get");
+		matchLex("(");
+		IDS();
+		matchLex(")");
+		matchLex(";");
 	}
+	else
+		errorLex("get");
 }
 
 void Parser::W()
 {
-	if (printRules) {
-		cout << "\t<While> ::=  while ( <Condition>  )  <Statement> "<<endl;
-		output << "\t<While> ::=  while ( <Condition>  )  <Statement> "<<endl;
+	if(printRules)
+		printProduction("<While> ::= while ( <Condition> ) <Statement>");
+
+	if (cmpLex("while"))
+	{
+		matchLex("while");
+		matchLex("(");
+		CND();
+		matchLex(")");
+		S();
 	}
+	else
+		errorLex("while");
 }
 
 void Parser::CND()
 {
-	if (printRules) {
-		cout << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>"<<endl;
-		output << "\t<Condition> ::=  <Expression>  <Relop>   <Expression>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Condition> ::= <Expression> <Relop> <Expression>");
+
+	E();
+	RLP();
+	E();
 }
 
 void Parser::RLP()
 {
-	if (printRules) {
-		cout << "\t<Relop> ::=  ==   |   ^=    |   >     |   <    |   =>    |   =<          "<<endl;
-		output << "\t <Relop> ::= ==   |   ^=    |   >     |   <    |   =>    |   =<          "<<endl;
+	if(printRules)
+		printProduction("<Relop> ::= == | ^= | > | < | => | =<");
+
+	if (cmpLex("==") ||
+		cmpLex("^=") ||
+		cmpLex(">")	 ||
+		cmpLex("<")  ||
+		cmpLex("=>") ||
+		cmpLex("=<") )
+	{
+		if(cmpLex("=="))
+			matchLex("==");
+		else
+		if(cmpLex("^="))
+			matchLex("^=");
+		else
+		if(cmpLex(">"))
+			matchLex(">");
+		else
+		if(cmpLex("<"))
+			matchLex("<");
+		else
+		if(cmpLex("=>"))
+			matchLex("=>");
+		else
+			matchLex("=<");
+	}
+	else
+	{
+		cout << "Error: Expected relational operator in line " << lineNum;
+		output << "Error: Expected relational operator in line " << lineNum;
+		exit(0);
 	}
 }
 
 void Parser::E()
 {
-	if (printRules) {
-		cout << "\t<Expression>  ::= <Expression> + <Term>    | <Expression>  - <Term>    |    <Term>"<<endl;
-		output << "\t<Expression>  ::= <Expression> + <Term>    | <Expression>  - <Term>    |    <Term>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Expression> ::= <Term> <Expression>'");
+
+	T();
+	Epr();
 }
 
 void Parser::Epr()
 {
+	if(printRules)
+		printProduction("<Expression>' ::= + <Term> <Expression>' ");
+
+	if (cmpLex("+"))
+	{
+		matchLex("*");
+		Epr();
+	}
+	else
+	if (cmpLex("-"))
+	{
+		matchLex("/");
+		Epr();
+	}
+
+	return;
 }
 
 void Parser::T()
 {
-	if (printRules) {
-		cout << "\t<Term>    ::=   <Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>"<<endl;
-		output << "\t<Term>    ::=   <Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>"<<endl;
-	}
+	if(printRules)
+		printProduction("<Term> ::= <Factor> <Term>'");
+
+	FA();
+	Tpr();
 }
 
 void Parser::Tpr()
 {
+	if(printRules)
+		printProduction("<Term>' ::= * <Factor> <Term>' | / <Factor> <Term>' | <Empty>");
 
+	if (cmpLex("*"))
+	{
+		matchLex("*");
+		Tpr();
+	}
+	else
+	if (cmpLex("/"))
+	{
+		matchLex("/");
+		Tpr();
+	}
+
+	return;
 }
 
 void Parser::FA()
 {
-	if (printRules) {
-		cout << "\t<Factor> ::= -  <Primary>    |    <Primary>"<<endl;
-		output << "\t<Factor> ::= -  <Primary>    |    <Primary>"<<endl;
+	if(printRules)
+		printProduction("<Factor> ::= - <Primary> | <Primary>");
+
+	if (cmpLex("-"))
+	{
+		matchLex("-");
+		PMY();
 	}
+	else
+		PMY();
 }
 
 void Parser::PMY()
 {
-	if (printRules) {
-		cout << "\t<Primary> ::= <Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |  <Real>  |   true   |  false "<<endl;
-		output << "\t<Primary> ::= <Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |  <Real>  |   true   |  false "<<endl;
+	if(printRules)
+		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
+
+	
+	if( cmpTok("int")			||
+		cmpTok("real")			|| 
+		cmpTok("true")			||
+		cmpTok("false")			||
+		cmpTok("identifier")	||
+		cmpLex("(") )
+	{ 
+	
+		if (cmpTok("int"))
+		{
+			matchTok("int");
+		}
+		else
+		if (cmpTok("real"))
+		{
+			matchTok("real");
+		}
+		else
+		if (cmpTok("true"))
+		{
+			matchTok("true");
+		}
+		else
+		if (cmpTok("false"))
+		{
+			matchTok("false");
+		}
+		else
+		if (cmpTok("identifier"))
+		{
+			matchTok("identifier");
+			PMYpr();
+		}
+		else
+		//if (testToken.lexeme.compare("(") == 0)
+		{
+			matchLex("(");
+			E();
+			if (cmpLex("("))
+			{
+				matchLex(")");
+			}
+			else
+				errorLex(")");
+
+			return;
+		}
 	}
+	else
+	{
+		cout << "Error: Expected primary in line " << lineNum;
+		output << "Error: Expected primary in line " << lineNum;
+		exit(0);
+	}
+
+}
+
+void Parser::PMYpr()
+{
+	if(printRules)
+		printProduction("<Primary>' ::= ( <IDs> ) | <Empty> ");
+
+	if (cmpLex("("))
+	{
+		matchLex("(");
+		IDS();
+		if (cmpLex(")"))
+			matchLex(")");
+		else
+			errorLex(")");
+
+	}
+
+	return;
 }
 
 void Parser::EMP()
 {
-	if (printRules) {
-		cout << "\t"<<endl;
-		output << "\t"<<endl;
-	}
+	if(printRules)
+		printProduction("<Empty> ::= Epsilon");
+
+	return;
 }

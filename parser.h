@@ -39,9 +39,14 @@ class Parser {
 		bool isOperator(std::string lex);
 		bool isSeparator(std::string lex);
 
-		void Parser::printToken(Token x);
-		void Parser::match(std::string lexeme);
-		void Parser::matchType(std::string tok);
+		//void Parser::printToken(Token x);
+		void Parser::printProduction(std::string rule);
+		void Parser::errorLex(std::string tok);
+		void Parser::errorTok(std::string tok);
+		bool Parser::cmpLex(std::string inp);
+		bool Parser::cmpTok(std::string inp);
+		void Parser::matchLex(std::string lexeme);
+		void Parser::matchTok(std::string tok);
 		void Parser::OFD();
 		void Parser::FD();
 		void Parser::FDpr();
@@ -78,6 +83,7 @@ class Parser {
 		void Parser::Tpr();
 		void Parser::FA();
 		void Parser::PMY();
+		void Parser::PMYpr();
 		void Parser::EMP();
 
 	public:
@@ -87,6 +93,7 @@ class Parser {
 		bool iseof();
 		int currentLine();
 		void Parser::R18S();
+		void Parser::printToken(Token x);
 
 };
 
