@@ -563,7 +563,7 @@ void Parser::OPL()
 	if (printRules)
 		printProduction("<Opt Parameter List> ::= <Parameter List> | <Empty>");
 
-	if (cmpLex("identifier"))
+	if (cmpTok("identifier"))
 	{
 		PL();
 	}
@@ -1005,12 +1005,14 @@ void Parser::Epr()
 	if (cmpLex("+"))
 	{
 		matchLex("*");
+		T();
 		Epr();
 	}
 	else
 	if (cmpLex("-"))
 	{
-		matchLex("/");
+		matchLex("-");
+		T();
 		Epr();
 	}
 
@@ -1034,12 +1036,14 @@ void Parser::Tpr()
 	if (cmpLex("*"))
 	{
 		matchLex("*");
+		FA();
 		Tpr();
 	}
 	else
 	if (cmpLex("/"))
 	{
 		matchLex("/");
+		FA();
 		Tpr();
 	}
 
@@ -1066,17 +1070,17 @@ void Parser::PMY()
 		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
 
 	
-	if( cmpTok("int")			||
+	if( cmpTok("integer")			||
 		cmpTok("real")			|| 
 		cmpTok("true")			||
 		cmpTok("false")			||
 		cmpTok("identifier")	||
-		cmpLex("(") )
+		cmpLex("("))
 	{ 
 	
-		if (cmpTok("int"))
+		if (cmpTok("integer"))
 		{
-			matchTok("int");
+			matchTok("integer");
 		}
 		else
 		if (cmpTok("real"))
@@ -1104,7 +1108,7 @@ void Parser::PMY()
 		{
 			matchLex("(");
 			E();
-			if (cmpLex("("))
+			if (cmpLex(")"))
 			{
 				matchLex(")");
 			}
