@@ -9,6 +9,7 @@ Project: Assignment 1
 
 #include "parser.h"
 #include <iomanip>
+#include <string>
 using namespace std;
 
 Parser::Parser(string fileIn, string fileOut){
@@ -53,13 +54,13 @@ Token Parser::lexer(){			//lexer function
 
 			testChar = input.get();			//sets next character to be read
 			if(testChar == '\n')
-					lineNum++;
+				lineNum++;
 		}
 		else
 		if(isspace(testChar))				//proceed through all whitespace
 		{
 			if(testChar == '\n')
-					lineNum++;
+				lineNum++;
 			do {
 				testChar = input.get();
 				if(testChar == '\n')
@@ -374,7 +375,6 @@ bool Parser::isOpSepChar(char a)
 		default:
 			break;
 	}
-
 	return false;
 }
 
@@ -422,8 +422,16 @@ IMPLEMENTATION OF SYNTAX ANALYZER
 */
 void Parser::printToken(Token x)
 {
-	cout << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
-	output << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
+	if(cmpTok("EOF"))
+		printRules = false;
+	else
+		printRules = true;
+
+	if (printRules && !cmpTok("EOF"))
+	{
+		cout << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
+		output << "Token: " << setw(15) << left  << x.token << "Lexeme: " << setw(15) << left << x.lexeme << endl;
+	}
 }
 
 void Parser::printProduction(std::string rule)
@@ -453,8 +461,7 @@ void Parser::matchLex(std::string lx)
 	if (cmpLex(lx))
 	{
 		testToken = lexer();
-		if(!cmpTok("EOF"))
-			printToken(testToken);
+		printToken(testToken);
 	}
 	else
 	{
@@ -467,8 +474,7 @@ void Parser::matchTok(std::string tok)
 	if (cmpTok(tok))
 	{
 		testToken = lexer();
-		if(!cmpTok("EOF"))
-			printToken(testToken);
+		printToken(testToken);
 	}
 	else
 	{
@@ -508,7 +514,6 @@ void Parser::R18S()
 	}
 	else
 		errorLex("%%");
-
 }
 
 void Parser::OFD() 
@@ -547,7 +552,6 @@ void Parser::F()
 	if(printRules)
 		printProduction("<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List>  <Body>");
 
-
 	if (cmpLex("function"))
 	{
 		matchLex("function");
@@ -560,8 +564,6 @@ void Parser::F()
 	}
 	else
 		errorLex("function");
-	
-
 }
 
 void Parser::OPL() 
@@ -573,7 +575,6 @@ void Parser::OPL()
 		PL();
 
 	EMP();
-
 }
 
 void Parser::PL() 
@@ -636,7 +637,6 @@ void Parser::Q()
 		output << "Error: Expected 'int', 'boolean', or 'real' in line " << lineNum;
 		exit(0);
 	}
-
 }
 
 void Parser::B()
@@ -652,7 +652,6 @@ void Parser::B()
 	}
 	else
 		errorLex("{");
-	
 }
 
 void Parser::ODL()
@@ -673,7 +672,6 @@ void Parser::DL()
 	if(printRules)
 		printProduction("<Declaration List>  ::= <Declaration> ; <Declaration List>'");
 	
-	//if error come back here and fix
 	D();
 	if (cmpLex(";"))
 	{
@@ -682,8 +680,6 @@ void Parser::DL()
 	}
 	else
 		errorLex(";");
-	
-
 }
 
 void Parser::DLpr()
@@ -800,7 +796,6 @@ void Parser::S()
 		cout << "Error: Incorrect statement format in line " << lineNum;
 		exit(0);
 	}
-
 }
 
 void Parser::CMP()
@@ -1136,7 +1131,6 @@ void Parser::PMY()
 		output << "Error: Expected primary in line " << lineNum;
 		exit(0);
 	}
-
 }
 
 void Parser::PMYpr()
@@ -1154,7 +1148,6 @@ void Parser::PMYpr()
 			errorLex(")");
 
 	}
-
 	EMP();
 }
 
