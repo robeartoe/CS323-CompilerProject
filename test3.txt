@@ -21,7 +21,7 @@ function totalPrice[principal:real,salesTax:real]
   get(principal$,maxPrincipal,salesTax,step);
   while(step < maxPrincipal)
     {
-      put(principal,salesTax);
+      put(principal + salesTax);
       put(salesTax(principal,salesTax));
       put(totalPrice(principal,salesTax));
       step = step + 1;
