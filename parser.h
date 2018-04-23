@@ -4,7 +4,7 @@ Names:	Stephen Shinn
 Michael Perna
 Robert Ruiz
 
-Project: Assignment 1
+Project: Assignment 3
 */
 
 #ifndef PARSER_H

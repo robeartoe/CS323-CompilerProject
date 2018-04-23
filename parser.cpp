@@ -4,16 +4,17 @@ Names:	Stephen Shinn
 Michael Perna
 Robert Ruiz
 
-Project: Assignment 1
+Project: Assignment 3
 */
 
 #include "parser.h"
+#include "tables.h"
 #include <iomanip>
 #include <string>
 using namespace std;
 
 Parser::Parser(string fileIn, string fileOut){
-	
+
 	input.open(fileIn);
 	output.open(fileOut);
 }
@@ -339,7 +340,7 @@ Token Parser::lexer(){			//lexer function
 			tokenFound = true;
 		}
 		else
-		{	
+		{
 			lexeme.push_back(testChar);
 			token = "unrecognized";
 			tokenFound = true;
@@ -370,7 +371,7 @@ bool Parser::isOpSepChar(char a)
 		//Special Case Characters
 		case '=':
 		case '^':
-		case '%': 
+		case '%':
 			return true;
 		default:
 			break;
@@ -497,7 +498,7 @@ void Parser::errorTok(std::string tok)
 }
 
 
-void Parser::R18S() 
+void Parser::R18S()
 {
 	testToken = lexer();
 	printToken(testToken);
@@ -516,7 +517,7 @@ void Parser::R18S()
 		errorLex("%%");
 }
 
-void Parser::OFD() 
+void Parser::OFD()
 {
 	if(printRules)
 		printProduction("<Opt Function Definitions> ::= <Function Definitions> | <Empty>");
@@ -527,7 +528,7 @@ void Parser::OFD()
 	EMP();
 }
 
-void Parser::FD() 
+void Parser::FD()
 {
 	if(printRules)
 		printProduction("<Function Definitions> ::= <Function> <Function Definitions>'");
@@ -536,7 +537,7 @@ void Parser::FD()
 	FDpr();
 }
 
-void Parser::FDpr() 
+void Parser::FDpr()
 {
 	if(printRules)
 		printProduction("<Function Declaration>' ::= <Function Declaration> | <Empty>");
@@ -547,7 +548,7 @@ void Parser::FDpr()
 	EMP();
 }
 
-void Parser::F() 
+void Parser::F()
 {
 	if(printRules)
 		printProduction("<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List>  <Body>");
@@ -566,7 +567,7 @@ void Parser::F()
 		errorLex("function");
 }
 
-void Parser::OPL() 
+void Parser::OPL()
 {
 	if (printRules)
 		printProduction("<Opt Parameter List> ::= <Parameter List> | <Empty>");
@@ -577,7 +578,7 @@ void Parser::OPL()
 	EMP();
 }
 
-void Parser::PL() 
+void Parser::PL()
 {
 	if(printRules)
 		printProduction("<Parameter List> ::= <Parameter> <Parameter List>'");
@@ -587,7 +588,7 @@ void Parser::PL()
 	EMP();
 }
 
-void Parser::PLpr() 
+void Parser::PLpr()
 {
 	if(printRules)
 		printProduction("<Parameter List>' ::= , <Parameter List> | <Empty>");
@@ -599,7 +600,7 @@ void Parser::PLpr()
 	}
 }
 
-void Parser::P() 
+void Parser::P()
 {
 	if(printRules)
 		printProduction("<Parameter> ::= <IDs> : <Qualifier>");
@@ -614,7 +615,7 @@ void Parser::P()
 		errorLex(":");
 }
 
-void Parser::Q() 
+void Parser::Q()
 {
 	if(printRules)
 		printProduction("<Qualifier> ::= int | boolean | real");
@@ -671,7 +672,7 @@ void Parser::DL()
 {
 	if(printRules)
 		printProduction("<Declaration List>  ::= <Declaration> ; <Declaration List>'");
-	
+
 	D();
 	if (cmpLex(";"))
 	{
@@ -691,7 +692,7 @@ void Parser::DLpr()
 		cmpLex("boolean") ||
 		cmpLex("real"))
 		DL();
-	
+
 	EMP();
 }
 
@@ -754,7 +755,7 @@ void Parser::SLpr()
 		cmpLex("get") ||
 		cmpLex("while"))
 		SL();
-	
+
 	EMP();
 }
 
@@ -770,7 +771,7 @@ void Parser::S()
 		cmpLex("put")			||
 		cmpLex("get")			||
 		cmpLex("while"))
-	{ 
+	{
 		if(cmpLex("{"))
 			CMP();
 		else
@@ -919,7 +920,7 @@ void Parser::SC()
 	if(printRules)
 		printProduction("<Scan> ::= get ( <IDs> ) ;");
 
-	if (cmpLex("get")) 
+	if (cmpLex("get"))
 	{
 		matchLex("get");
 		matchLex("(");
@@ -1076,15 +1077,15 @@ void Parser::PMY()
 	if(printRules)
 		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
 
-	
+
 	if( cmpTok("integer")		||
-		cmpTok("real")			|| 
+		cmpTok("real")			||
 		cmpLex("true")			||
 		cmpLex("false")			||
 		cmpTok("identifier")	||
 		cmpLex("(") )
-	{ 
-	
+	{
+
 		if (cmpTok("integer"))
 		{
 			matchTok("integer");
@@ -1172,3 +1173,7 @@ void Parser::parseMsg()
 		output << "End of file." << endl;
 	}
 }
+
+// ==================================
+// IMPLEMENTATION OF ASSEMBLY ANALYZER
+// ==================================

@@ -4,7 +4,7 @@ Names:	Stephen Shinn
 		Michael Perna
 		Robert Ruiz
 
-Project: Assignment 1
+Project: Assignment 3
 */
 
 #include "parser.h"
@@ -37,7 +37,7 @@ int main(){
 		exit(0);
 	}
 
-	
+
 	std::cout << "Please enter the name of the output file: ";
 	getline(cin,fileOutputName);
 
