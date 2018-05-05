@@ -8,6 +8,7 @@ Project: Assignment 3
 */
 
 #include "parser.h"
+#include "tables.h"
 #include <iomanip>
 #include <cstdlib>
 

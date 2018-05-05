@@ -7,60 +7,31 @@
 #include <map>
 #include <iostream>
 
-// NOTE: extern makes these variables global variables. (I didn't know that. I'm still pretty rusty with C++)
-extern int Memory_address = 2000;
+extern int Memory_address;
+
 struct sym{
   std::string identifier;
   std::string type;
   int memLocation;
-}
+};
 
-extern std::map<int,sym> tableMap;
+extern std::map<int,sym>tableMap;
 
-sym get_address(std::string token);
+int get_address(std::string token);
 
-// class symTable {
-// private:
-//   sym symbolRow;
-//   std::map<int,sym> tableMap;
-//
-// public:
-//   SymTable ();
-//   void insert(int addr, std::string id, std::string t,std::string memLoc);
-//
-//   // Returns a symbol struct object.
-//   sym at(int address);
-//
-//   // COUT all information in map.
-//   // The key values will be the addresses. So by default it will be printed in order. 2000 and on.
-//   void print();
-// };
-
-extern int instr_address = 1;
-
+extern int instr_address;
 struct instr{
   std::string address;
   std::string op;
   std::string oprnd;
-}
+};
 
-extern std::map<int,instr> Instr_table;
+extern std::map<int,instr>Instr_table;
 
 void gen_instr(std::string op,std::string oprd);
 
 // TODO: Not sure where to implement the stacks.
 void back_patch(int instr_address);
-
-// class instrTable {
-// private:
-//   instr instructRow;
-//   std::map<int,instr> instrMap;
-// public:
-//   instrTable ();
-//   void insert(int addr,std::string address,std::string op, std::string opr);
-//   instr at(int addr);
-//   void print();
-// };
 
 #endif
 /*
