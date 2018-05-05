@@ -1,9 +1,7 @@
-#include "tables.h" //Yeah. Including this would definitely stop these errors. Whoops. haha
+#include "tables.h"
 //-------------------------------------------------------------------------
 //Symbol Table: //----------------------------------------------------------
 // NOTE: extern makes these variables global variables. (I didn't know that. I'm still pretty rusty with C++)
-// https://www.fayewilliams.com/2015/01/06/the-extern-keyword/
-// UPDATE: Turns out you declare it here. But use the extern keyword in the parser.cpp file. So it'll know where this variable is.
 // NOTE: "Note that if you include a definition AND the extern keyword, the extern is ignored"
 
 int Memory_address = 2000;

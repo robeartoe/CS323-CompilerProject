@@ -801,6 +801,7 @@ void Parser::S()
 
 void Parser::CMP()
 {
+	//TODO: Assignment 3 instructions.
 	if(printRules)
 		printProduction("<Compound> ::= { <Statement List> }");
 
@@ -821,9 +822,11 @@ void Parser::A()
 
 	if (cmpTok("identifier"))
 	{
+		std::string save = token;
 		matchTok("identifier");
 		matchLex("=");
 		E();
+		gen_instr("POPM",get_address(save));
 		matchLex(";");
 	}
 	else
@@ -838,10 +841,12 @@ void Parser::I()
 	if (cmpLex("if"))
 	{
 		matchLex("if");
+		addr = instr_address;
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
+		//back_patch(instr_address);
 		Ipr();
 	}
 	else
@@ -860,6 +865,7 @@ void Parser::Ipr()
 	{
 		matchLex("else");
 		S();
+		//I believe .... there's a back_patch around here?
 		matchLex("endif");
 	}
 	else
@@ -900,6 +906,7 @@ void Parser::Rpr()
 
 void Parser::PR()
 {
+  // TODO: Assignment 3 Instructions
 	if(printRules)
 		printProduction("<Print> ::= put ( <Expression> ) ;");
 
@@ -917,6 +924,8 @@ void Parser::PR()
 
 void Parser::SC()
 {
+	//TODO: Assignment 3 instructions
+  //TODO: Can't find F() function?
 	if(printRules)
 		printProduction("<Scan> ::= get ( <IDs> ) ;");
 
@@ -940,10 +949,14 @@ void Parser::W()
 	if (cmpLex("while"))
 	{
 		matchLex("while");
+		addr = instr_address;
+		gen_instr("LABEL","");
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
+		gen_instr("JUMP",addr);
+		//TODO: back_patch(instr_address);
 	}
 	else
 		errorLex("while");
@@ -972,20 +985,38 @@ void Parser::RLP()
 		cmpLex("=<") )
 	{
 		if(cmpLex("=="))
+			gen_instr("EQU","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex("==");
 		else
 		if(cmpLex("^="))
+			gen_instr("NEQ","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex("^=");
 		else
 		if(cmpLex(">"))
+			gen_instr("GRT","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex(">");
 		else
 		if(cmpLex("<"))
+			gen_instr("LES","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex("<");
 		else
 		if(cmpLex("=>"))
+			gen_instr("GEQ","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex("=>");
 		else
+			gen_instr("LEQ","");
+			//push_jumpstack(instr_address);
+			gen_instr("JUMPZ","");
 			matchLex("=<");
 	}
 	else
@@ -1014,6 +1045,7 @@ void Parser::Epr()
 	{
 		matchLex("+");
 		T();
+		gen_instr("ADD",""); //Essentially "" is NIL.
 		Epr();
 	}
 	else
@@ -1045,6 +1077,7 @@ void Parser::Tpr()
 	{
 		matchLex("*");
 		FA();
+		gen_instr("MUL","");
 		Tpr();
 	}
 	else
@@ -1173,7 +1206,3 @@ void Parser::parseMsg()
 		output << "End of file." << endl;
 	}
 }
-
-// ==================================
-// IMPLEMENTATION OF ASSEMBLY ANALYZER
-// ==================================
