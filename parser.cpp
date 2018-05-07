@@ -822,7 +822,7 @@ void Parser::A()
 
 	if (cmpTok("identifier"))
 	{
-		std::string save = "token";
+		std::string save = testToken.token;
 		matchTok("identifier");
 		matchLex("=");
 		E();
@@ -987,7 +987,7 @@ void Parser::RLP()
 		if(cmpLex("=="))
 		{
 			gen_instr("EQU",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex("==");
 		}
@@ -995,7 +995,7 @@ void Parser::RLP()
 		if(cmpLex("^="))
 		{
 			gen_instr("NEQ",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex("^=");
 		}
@@ -1003,7 +1003,7 @@ void Parser::RLP()
 		if(cmpLex(">"))
 		{
 			gen_instr("GRT",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex(">");
 		}
@@ -1011,7 +1011,7 @@ void Parser::RLP()
 		if(cmpLex("<"))
 		{
 			gen_instr("LES",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex("<");
 		}
@@ -1019,13 +1019,13 @@ void Parser::RLP()
 		if(cmpLex("=>"))
 		{
 			gen_instr("GEQ",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex("=>");
 		}
 		else{
 			gen_instr("LEQ",0);
-			push_jumpstack(instr_address);
+			jumpStack.push(instr_address);
 			gen_instr("JUMPZ",0);
 			matchLex("=<");
 		}
