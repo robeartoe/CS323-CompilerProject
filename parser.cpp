@@ -956,7 +956,7 @@ void Parser::W()
 		matchLex(")");
 		S();
 		gen_instr("JUMP",addr);
-		//TODO: back_patch(instr_address);
+		back_patch(instr_address);
 	}
 	else
 		errorLex("while");
