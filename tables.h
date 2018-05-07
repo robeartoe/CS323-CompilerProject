@@ -1,11 +1,12 @@
-// NOTE: I thought about making classes for the tables, then just thought to make it much simpler. So I'm keeping both, to see what you guys would like more.
-
 #ifndef TABLES_H
 #define TABLES_H
 
 #include <string>
 #include <map>
+#include <stack>
 #include <iostream>
+
+//Symbol Table:
 
 extern int Memory_address;
 
@@ -19,19 +20,30 @@ extern std::map<int,sym>tableMap;
 
 int get_address(std::string token);
 
+bool inSymTable(std::string token);
+
+void printSymTableIdentifiers();
+
+//Instruction Table:
+
 extern int instr_address;
 struct instr{
-  std::string address;
+  int address;
   std::string op;
-  std::string oprnd;
+  int oprnd;
 };
 
 extern std::map<int,instr>Instr_table;
 
-void gen_instr(std::string op,std::string oprd);
+void gen_instr(std::string op,int oprd);
 
-// TODO: Not sure where to implement the stacks.
+void printInstrTable();
+
+//Stacks:
 void back_patch(int instr_address);
+
+extern std::stack<int> instrStack;
+extern std::stack<int> jumpStack;
 
 #endif
 /*

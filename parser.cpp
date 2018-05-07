@@ -822,7 +822,7 @@ void Parser::A()
 
 	if (cmpTok("identifier"))
 	{
-		std::string save = token;
+		std::string save = "token";
 		matchTok("identifier");
 		matchLex("=");
 		E();
@@ -841,12 +841,12 @@ void Parser::I()
 	if (cmpLex("if"))
 	{
 		matchLex("if");
-		addr = instr_address;
+		int addr = instr_address;
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
-		//back_patch(instr_address);
+		back_patch(instr_address);
 		Ipr();
 	}
 	else
@@ -949,8 +949,8 @@ void Parser::W()
 	if (cmpLex("while"))
 	{
 		matchLex("while");
-		addr = instr_address;
-		gen_instr("LABEL","");
+		int addr = instr_address;
+		gen_instr("LABEL",0);
 		matchLex("(");
 		CND();
 		matchLex(")");
@@ -985,39 +985,50 @@ void Parser::RLP()
 		cmpLex("=<") )
 	{
 		if(cmpLex("=="))
-			gen_instr("EQU","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		{
+			gen_instr("EQU",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex("==");
+		}
 		else
 		if(cmpLex("^="))
-			gen_instr("NEQ","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		{
+			gen_instr("NEQ",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex("^=");
+		}
 		else
 		if(cmpLex(">"))
-			gen_instr("GRT","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		{
+			gen_instr("GRT",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex(">");
+		}
 		else
 		if(cmpLex("<"))
-			gen_instr("LES","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		{
+			gen_instr("LES",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex("<");
+		}
 		else
 		if(cmpLex("=>"))
-			gen_instr("GEQ","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		{
+			gen_instr("GEQ",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex("=>");
-		else
-			gen_instr("LEQ","");
-			//push_jumpstack(instr_address);
-			gen_instr("JUMPZ","");
+		}
+		else{
+			gen_instr("LEQ",0);
+			push_jumpstack(instr_address);
+			gen_instr("JUMPZ",0);
 			matchLex("=<");
+		}
 	}
 	else
 	{
@@ -1045,7 +1056,7 @@ void Parser::Epr()
 	{
 		matchLex("+");
 		T();
-		gen_instr("ADD",""); //Essentially "" is NIL.
+		gen_instr("ADD",0); //Essentially 0 is NIL.
 		Epr();
 	}
 	else
@@ -1077,7 +1088,7 @@ void Parser::Tpr()
 	{
 		matchLex("*");
 		FA();
-		gen_instr("MUL","");
+		gen_instr("MUL",0);
 		Tpr();
 	}
 	else

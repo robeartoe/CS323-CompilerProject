@@ -3,7 +3,7 @@
 CXX=g++
 CXXFLAGS=-std=c++1y -Wall -pedantic
 PROG=-o rat
-SOURCES=main.cpp parser.cpp tables.cpp testfile.cpp	
+SOURCES=main.cpp parser.cpp tables.cpp	
 HEADERS=parser.h parser.h
 
 all: $(SOURCES) $(HEADERS)
