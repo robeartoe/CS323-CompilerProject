@@ -848,13 +848,13 @@ void Parser::I()
 		CND();
 		matchLex(")");
 		S();
-
+		// TODO: I thought I had the logic right, but not quite.
 		int elseaddr = instr_address; //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
-
-		gen_instr("JUMP",0);
-		back_patch(addr);
+		gen_instr("JUMP",elseaddr);
+		back_patch(instr_address);
+		jumpStack.push(elseaddr);
 		Ipr();
-		back_patch(elseaddr);
+		back_patch(instr_address);
 	}
 	else
 		errorLex("if");
