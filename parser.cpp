@@ -713,6 +713,8 @@ void Parser::IDS()
 	if (cmpTok("identifier"))
 	{
 		matchTok("identifier");
+		// TODO: POPM If in GET()
+		//gen_instr("POPM",get_address(testToken.token));
 		IDSpr();
 	}
 	else
@@ -846,8 +848,13 @@ void Parser::I()
 		CND();
 		matchLex(")");
 		S();
-		back_patch(instr_address);
+
+		int elseaddr = instr_address; //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
+
+		gen_instr("JUMP",0);
+		back_patch(addr);
 		Ipr();
+		back_patch(elseaddr);
 	}
 	else
 		errorLex("if");
@@ -907,6 +914,8 @@ void Parser::Rpr()
 void Parser::PR()
 {
   // TODO: Assignment 3 Instructions
+	// STDOUT         Pops the value from TOS and outputs it to the standard output
+
 	if(printRules)
 		printProduction("<Print> ::= put ( <Expression> ) ;");
 
@@ -914,6 +923,7 @@ void Parser::PR()
 	{
 		matchLex("put");
 		matchLex("(");
+		gen_instr("STDOUT",0);
 		E();
 		matchLex(")");
 		matchLex(";");
@@ -925,7 +935,8 @@ void Parser::PR()
 void Parser::SC()
 {
 	//TODO: Assignment 3 instructions
-  //TODO: Can't find F() function?
+	// STDIN       Get the value from the standard input and place in onto the TOS
+
 	if(printRules)
 		printProduction("<Scan> ::= get ( <IDs> ) ;");
 
@@ -933,7 +944,8 @@ void Parser::SC()
 	{
 		matchLex("get");
 		matchLex("(");
-		IDS();
+		gen_instr("STDIN",0);
+		IDS(); //From within here... You add the popm instructions?
 		matchLex(")");
 		matchLex(";");
 	}
