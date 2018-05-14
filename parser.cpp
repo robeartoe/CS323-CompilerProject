@@ -8,15 +8,13 @@ Project: Assignment 3
 */
 
 #include "parser.h"
-#include "tables.h"
 #include <iomanip>
 #include <string>
 using namespace std;
 
-Parser::Parser(string fileIn, string fileOut){
-
-	input.open(fileIn);
-	output.open(fileOut);
+Parser::Parser(string fileIn, string fileOut) {
+  input.open(fileIn);
+  output.open(fileOut);
 }
 
 /*
@@ -25,8 +23,7 @@ IMPLEMENTATION OF LEXER
 ========================
 */
 
-Token Parser::lexer(){			//lexer function
-
+Token Parser::lexer() {			//lexer function
 	string lexeme;	//Strings that will contain data after processing
 	string token;
 	bool tokenFound = false;
@@ -48,7 +45,7 @@ Token Parser::lexer(){			//lexer function
 		if (testChar == '!')
 		{
 			do {
-				testChar = input.get();		//proceed to next character inside comment
+				testChar = input.get();	//proceed to next character inside comment
 				if(testChar == '\n')
 					lineNum++;
 			} while(testChar != '!');		//iterate through all of comment
@@ -624,13 +621,13 @@ void Parser::Q()
 		cmpLex("boolean") ||
 		cmpLex("real"))
 	{
-		if(cmpLex("int"))
+		if(cmpLex("int")) {
 			matchLex("int");
-		else
-		if(cmpLex("boolean"))
+		} else if(cmpLex("boolean")) {
 			matchLex("boolean");
-		else
+		} else {
 			matchLex("real");
+		}
 	}
 	else
 	{
@@ -714,7 +711,7 @@ void Parser::IDS()
 	{
 		matchTok("identifier");
 		// TODO: POPM If in GET()
-		//gen_instr("POPM",get_address(testToken.token));
+		//inst_table_.gen_instr("POPM",sym_table_.get_address(testToken.token));
 		IDSpr();
 	}
 	else
@@ -828,7 +825,7 @@ void Parser::A()
 		matchTok("identifier");
 		matchLex("=");
 		E();
-		gen_instr("POPM",get_address(save));
+		inst_table_.gen_instr("POPM", sym_table_.get_address(save));
 		matchLex(";");
 	}
 	else
@@ -843,18 +840,21 @@ void Parser::I()
 	if (cmpLex("if"))
 	{
 		matchLex("if");
-		int addr = instr_address;
+
+		// int addr = sym_table_.get_address();
+
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
+
 		// TODO: I thought I had the logic right, but not quite.
-		int elseaddr = instr_address; //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
-		gen_instr("JUMP",elseaddr);
-		back_patch(instr_address);
-		jumpStack.push(elseaddr);
+		 //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. 
+		 // So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
+        
+		inst_table_.back_patch();
 		Ipr();
-		back_patch(instr_address);
+		
 	}
 	else
 		errorLex("if");
@@ -923,7 +923,7 @@ void Parser::PR()
 	{
 		matchLex("put");
 		matchLex("(");
-		gen_instr("STDOUT",0);
+		inst_table_.gen_instr("STDOUT",0);
 		E();
 		matchLex(")");
 		matchLex(";");
@@ -944,7 +944,7 @@ void Parser::SC()
 	{
 		matchLex("get");
 		matchLex("(");
-		gen_instr("STDIN",0);
+		inst_table_.gen_instr("STDIN",0);
 		IDS(); //From within here... You add the popm instructions?
 		matchLex(")");
 		matchLex(";");
@@ -960,16 +960,17 @@ void Parser::W()
 
 	if (cmpLex("while"))
 	{
+		size_t address = inst_table_.get_inst_num();
 		matchLex("while");
-		int addr = instr_address;
-		gen_instr("LABEL",0);
+		inst_table_.gen_instr("LABEL", 0);
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
-		gen_instr("JUMP",addr);
-		back_patch(instr_address);
+		inst_table_.gen_instr("JUMP", address);
+		inst_table_.back_patch();
 	}
+
 	else
 		errorLex("while");
 }
@@ -998,47 +999,47 @@ void Parser::RLP()
 	{
 		if(cmpLex("=="))
 		{
-			gen_instr("EQU",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+			inst_table_.gen_instr("EQU",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("==");
 		}
 		else
 		if(cmpLex("^="))
 		{
-			gen_instr("NEQ",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+			inst_table_.gen_instr("NEQ",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("^=");
 		}
 		else
 		if(cmpLex(">"))
 		{
-			gen_instr("GRT",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+			inst_table_.gen_instr("GRT",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex(">");
 		}
 		else
 		if(cmpLex("<"))
 		{
-			gen_instr("LES",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+			inst_table_.gen_instr("LES",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("<");
 		}
 		else
 		if(cmpLex("=>"))
 		{
-			gen_instr("GEQ",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+			inst_table_.gen_instr("GEQ",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("=>");
 		}
-		else{
-			gen_instr("LEQ",0);
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ",0);
+		else {
+			inst_table_.gen_instr("LEQ",0);
+			inst_table_.push_jump();
+			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("=<");
 		}
 	}
@@ -1052,7 +1053,7 @@ void Parser::RLP()
 
 void Parser::E()
 {
-	if(printRules)
+	if (printRules)
 		printProduction("<Expression> ::= <Term> <Expression>'");
 
 	T();
@@ -1068,7 +1069,7 @@ void Parser::Epr()
 	{
 		matchLex("+");
 		T();
-		gen_instr("ADD",0); //Essentially 0 is NIL.
+		inst_table_.gen_instr("ADD", 0); //Essentially 0 is NIL.
 		Epr();
 	}
 	else
@@ -1076,6 +1077,7 @@ void Parser::Epr()
 	{
 		matchLex("-");
 		T();
+		inst_table_.gen_instr("SUB", 0);
 		Epr();
 	}
 
@@ -1100,7 +1102,7 @@ void Parser::Tpr()
 	{
 		matchLex("*");
 		FA();
-		gen_instr("MUL",0);
+		inst_table_.gen_instr("MUL", 0);
 		Tpr();
 	}
 	else
@@ -1108,6 +1110,7 @@ void Parser::Tpr()
 	{
 		matchLex("/");
 		FA();
+		inst_table_.gen_instr("DIV", 0);
 		Tpr();
 	}
 
@@ -1120,12 +1123,9 @@ void Parser::FA()
 		printProduction("<Factor> ::= - <Primary> | <Primary>");
 
 	if (cmpLex("-"))
-	{
-		matchLex("-");
-		PMY();
-	}
-	else
-		PMY();
+	  matchLex("-");
+    
+	PMY();
 }
 
 void Parser::PMY()
@@ -1133,8 +1133,8 @@ void Parser::PMY()
 	if(printRules)
 		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
 
-
-	if( cmpTok("integer")		||
+ 
+	if (cmpTok("integer")		||
 		cmpTok("real")			||
 		cmpLex("true")			||
 		cmpLex("false")			||

@@ -14,10 +14,11 @@ Project: Assignment 3
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include "tables.h"
 
 struct Token {
-	std::string token;
-	std::string lexeme;
+  std::string token;
+  std::string lexeme;
 };
 
 class Parser {
@@ -25,9 +26,12 @@ class Parser {
 		//PRINT PRODUCTION RULES
 		bool printRules = true;
 
+        SymbolTable sym_table_;
+		InstructionTable inst_table_;
+
 		std::ifstream input;
 		std::ofstream output;
-
+    
 		std::vector<std::string> keywords{ "int", "boolean", "real", "if", "endif", "else", "return", "put", "get", "while", "true", "false", "function" };
 		std::vector<std::string> operators{"+", "-", "*", "/", "<", ">", "=", "=>", "=<", "==", "^="};
 		std::vector<std::string> separators{";", ":", ",", "{", "}", "(", ")", "[", "]", "%%"};

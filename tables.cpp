@@ -1,82 +1,79 @@
 #include "tables.h"
-//-------------------------------------------------------------------------
-//Symbol Table: //----------------------------------------------------------
-// NOTE: extern makes these variables global variables.
-// NOTE: "Note that if you include a definition AND the extern keyword, the extern is ignored"
+#include <iostream>
 
-//TODO: If an identifier is used without declaring it, then the parser should provide an error message. Also, if an identifier is already in the table and wants to declare it for the second time, then the parser should provide an error message. Also, you should check the type match.
+SymbolTable::SymbolTable() : address_(STARTING_ADDRESS) {}
 
-int Memory_address = 2000;
-std::map<int,sym>tableMap;
-
-// A procedure that will insert into the table
-void insertSym(std::string type, std::string id){
-  sym newRow;
-  newRow.identifier = id;
-  newRow.type = type;
-  newRow.memLocation = Memory_address;
-  tableMap[Memory_address] = newRow;
-  Memory_address++;
+void SymbolTable::insert(std::string &type, std::string &id) {
+  if (is_duplicate(id)) {
+    std::cout << id + " previously declared" << std::endl;
+    exit(1);
+  }
+  
+  Symbol newRow(type, id, address_++);
+  table_[newRow.address_] = newRow;
 }
 
-int get_address(std::string token){
-  for (auto &i : tableMap){
-    if (i.second.identifier == token) {
+int SymbolTable::get_address(std::string &token) {
+  for (auto &i : table_) {
+    if (i.second.identifier_ == token) {
       return i.first;
     }
   }
-  return -1; //Will return -1 if address is NOT found.
+  return -1;
 }
 
-//  A procedure that will check to see if a particular identifier is already in the table
-bool inSymTable(std::string token){
-  for (auto &i : tableMap){
-    if (i.second.identifier == token) {
+bool SymbolTable::inSymTable(std::string &token) {
+  for (auto &i : table_) {
+    if (i.second.identifier_ == token) {
       return true;
     }
   }
   return false;
 }
 
-// A procedure that will printout all identifiers in the table.
-void printSymTableIdentifiers(){
-  for (auto &i : tableMap){
-    std::cout << "Identifer: "<< i.second.identifier;
-    std::cout << " Type: "<< i.second.type << std::endl;
+void SymbolTable::print() {
+  for (auto &i : table_) {
+    std::cout << "Identifer: "<< i.second.identifier_ << std::endl;
+    std::cout << "Type: "<< i.second.type_ << std::endl;
   }
 }
 
-//----------------------------------------------------------
-//InstructionTable: //----------------------------------------------------------
+bool SymbolTable::is_duplicate(std::string &id) {
+  for (auto el : table_) {
+    if (el.second.identifier_.compare(id) == 0) {
+      return true;
+    }
+  }
 
-
-int instr_address = 1;
-std::map<int,instr>Instr_table;
-
-void gen_instr(std::string op,int oprd){
-  instr newRow;
-  newRow.address = instr_address;
-  newRow.op = op;
-  newRow.oprnd = oprd;
-  Instr_table[instr_address] = newRow;
-  instr_address++;
+  return false;
 }
 
-void printInstrTable(){
-  for (auto &i : Instr_table){
-    std::cout << "Address: "<< i.second.address;
-    std::cout << " Operation: "<< i.second.op;
-    std::cout << " Operand: "<< i.second.oprnd << std::endl;
+
+InstructionTable::InstructionTable() : instruction_(STARTING_INSTRUCTION) {}
+
+void InstructionTable::gen_instr(const std::string &op, int operand) {
+  Instruction newRow(instruction_++, op, operand);
+  table_[newRow.address_] = newRow;
+}
+
+void InstructionTable::push_jump() {
+  jump_stack_.push(instruction_++);
+}
+
+void InstructionTable::print() {
+  for (auto &i : table_) {
+    std::cout << "Address: " << i.second.address_ << std::endl;
+    std::cout << " Operation: "<< i.second.op_ << std::endl;
+    std::cout << " Operand: "<< i.second.operand_ << std::endl;
   }
 }
 
-//----------------------------------------------------------
-//Stacks: //----------------------------------------------------------
-std::stack<int> instrStack;
-std::stack<int> jumpStack;
+void InstructionTable::back_patch() {
+  size_t addr = jump_stack_.top();
+  jump_stack_.pop();
+  table_[addr].operand_ = instruction_;
+}
 
-void back_patch(int instr_address){
-  int addr = jumpStack.top();
-  jumpStack.pop();
-  Instr_table[addr].oprnd = instr_address;
+size_t InstructionTable::get_inst_num() {
+  return instruction_;
 }
