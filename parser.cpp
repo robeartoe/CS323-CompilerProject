@@ -701,7 +701,7 @@ void Parser::D()
 	if(printRules)
 		printProduction("<Declaration> ::= <Qualifier> <IDs>");
     
-	Q();
+	Q();       
 	IDS();
 }
 
@@ -712,6 +712,7 @@ void Parser::IDS()
 
 	if (cmpTok("identifier"))
 	{
+		sym_table_.insert(testToken.lexeme);
 		matchTok("identifier");
 		// TODO: POPM If in GET()
 		//inst_table_.gen_instr("POPM",sym_table_.get_address(testToken.token));

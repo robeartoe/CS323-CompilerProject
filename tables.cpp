@@ -3,13 +3,13 @@
 
 SymbolTable::SymbolTable() : address_(STARTING_ADDRESS) {}
 
-void SymbolTable::insert(std::string &type, std::string &id) {
+void SymbolTable::insert(std::string &id) {
   if (is_duplicate(id)) {
     std::cout << id + " previously declared" << std::endl;
     exit(1);
   }
   
-  Symbol newRow(type, id, address_++);
+  Symbol newRow(current_type_, id, address_++);
   table_[newRow.address_] = newRow;
 }
 

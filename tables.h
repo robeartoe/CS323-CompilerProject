@@ -33,7 +33,7 @@ private:
   bool is_duplicate(std::string &id);
 public:
   SymbolTable();
-  void insert(std::string &type, std::string &id);
+  void insert(std::string &id);
   int get_address(std::string &token);
   bool inSymTable(std::string &token);
   void print();
