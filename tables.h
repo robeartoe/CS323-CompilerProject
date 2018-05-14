@@ -26,7 +26,6 @@ class SymbolTable {
 private:
   const size_t STARTING_ADDRESS = 2000;
   size_t address_;
-  
   std::map<int, Symbol> table_;
 
   std::string current_type_;

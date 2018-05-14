@@ -1233,3 +1233,8 @@ void Parser::parseMsg()
 		output << "End of file." << endl;
 	}
 }
+
+void Parser::print_tables() {
+  
+  inst_table_.print();
+}

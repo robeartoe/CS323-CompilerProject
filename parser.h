@@ -89,7 +89,7 @@ class Parser {
 		void PMY();
 		void PMYpr();
 		void EMP();
-
+       
 	public:
 		Token testToken;
 		Parser(std::string fileIn, std::string fileOut);
@@ -99,6 +99,7 @@ class Parser {
 		void R18S();
 		void printToken(Token x);
 		void parseMsg();
+		void print_tables();
 
 };
 
