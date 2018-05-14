@@ -52,7 +52,6 @@ bool SymbolTable::is_duplicate(std::string &id) {
   return false;
 }
 
-
 InstructionTable::InstructionTable() : instruction_(STARTING_INSTRUCTION) {}
 
 void InstructionTable::gen_instr(const std::string &op, int operand) {

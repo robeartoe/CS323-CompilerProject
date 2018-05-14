@@ -38,12 +38,10 @@ int main(){
 		exit(0);
 	}
 
-
 	std::cout << "Please enter the name of the output file: ";
 	getline(cin,fileOutputName);
 
 	cout << endl;
-
 
 	Parser synckr(fileInputName, fileOutputName);
 
@@ -52,6 +50,6 @@ int main(){
 	//If last token is EOF, parsing successful
 	synckr.parseMsg();
     synckr.print_tables();
-
+    
 	return 0;
 }
