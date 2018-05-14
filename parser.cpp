@@ -623,10 +623,13 @@ void Parser::Q()
 	{
 		if(cmpLex("int")) {
 			matchLex("int");
+			sym_table_.set_current_type("int");
 		} else if(cmpLex("boolean")) {
 			matchLex("boolean");
+		    sym_table_.set_current_type("boolean");
 		} else {
 			matchLex("real");
+            sym_table_.set_current_type("real");		
 		}
 	}
 	else
@@ -697,7 +700,7 @@ void Parser::D()
 {
 	if(printRules)
 		printProduction("<Declaration> ::= <Qualifier> <IDs>");
-
+    
 	Q();
 	IDS();
 }

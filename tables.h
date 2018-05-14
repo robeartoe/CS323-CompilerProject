@@ -25,9 +25,11 @@ struct Instruction {
 class SymbolTable {
 private:
   const size_t STARTING_ADDRESS = 2000;
-  size_t address_; 
+  size_t address_;
+  
   std::map<int, Symbol> table_;
 
+  std::string current_type_;
   bool is_duplicate(std::string &id);
 public:
   SymbolTable();
@@ -35,6 +37,7 @@ public:
   int get_address(std::string &token);
   bool inSymTable(std::string &token);
   void print();
+  void set_current_type(const std::string &type);
 };
 
 class InstructionTable {

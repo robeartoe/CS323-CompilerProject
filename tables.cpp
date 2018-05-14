@@ -13,6 +13,10 @@ void SymbolTable::insert(std::string &type, std::string &id) {
   table_[newRow.address_] = newRow;
 }
 
+void SymbolTable::set_current_type(const std::string &type) {
+  current_type_ = type;
+}
+
 int SymbolTable::get_address(std::string &token) {
   for (auto &i : table_) {
     if (i.second.identifier_ == token) {
