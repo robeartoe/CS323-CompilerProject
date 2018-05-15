@@ -25,15 +25,6 @@ int SymbolTable::get_address(std::string &token) {
   return -1;
 }
 
-bool SymbolTable::inSymTable(std::string &token) {
-  for (auto &i : table_) {
-    if (i.second.identifier_ == token) {
-      return true;
-    }
-  }
-  return false;
-}
-
 void SymbolTable::print() {
   for (auto &i : table_) {
     std::cout << "Identifer: "<< i.second.identifier_ << std::endl;

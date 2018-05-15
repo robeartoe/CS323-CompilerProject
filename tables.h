@@ -34,7 +34,6 @@ public:
   SymbolTable();
   void insert(std::string &id);
   int get_address(std::string &token);
-  bool inSymTable(std::string &token);
   void print();
   void set_current_type(const std::string &type);
 };
