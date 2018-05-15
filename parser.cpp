@@ -966,8 +966,8 @@ void Parser::W()
 	if (cmpLex("while"))
 	{
 		size_t address = inst_table_.get_inst_num();
-		matchLex("while");
 		inst_table_.gen_instr("LABEL", 0);
+		matchLex("while");
 		matchLex("(");
 		CND();
 		matchLex(")");
@@ -986,8 +986,26 @@ void Parser::CND()
 		printProduction("<Condition> ::= <Expression> <Relop> <Expression>");
 
 	E();
+	std::string op = testToken.lexeme;
 	RLP();
 	E();
+
+	if (op.compare("==") == 0) {
+	  inst_table_.gen_instr("EQU", 0);
+	} else if (op.compare("^=") == 0) {
+      inst_table_.gen_instr("NEQ", 0);
+	} else if (op.compare(">") == 0) {
+      inst_table_.gen_instr("GRT", 0);
+	} else if (op.compare("<") == 0) {
+	  inst_table_.gen_instr("LES", 0);
+	} else if (op.compare("=>") == 0) {
+      inst_table_.gen_instr("GEQ",0);
+	} else if (op.compare("=<") == 0) {
+      inst_table_.gen_instr("LEQ",0);
+	}
+
+	inst_table_.push_jump();
+	inst_table_.gen_instr("JUMPZ", 0);
 }
 
 void Parser::RLP()
@@ -1004,47 +1022,30 @@ void Parser::RLP()
 	{
 		if(cmpLex("=="))
 		{
-			inst_table_.gen_instr("EQU",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("==");
 		}
 		else
 		if(cmpLex("^="))
 		{
-			inst_table_.gen_instr("NEQ",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("^=");
 		}
 		else
 		if(cmpLex(">"))
 		{
-			inst_table_.gen_instr("GRT",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
 			matchLex(">");
 		}
 		else
 		if(cmpLex("<"))
 		{
-			inst_table_.gen_instr("LES",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("<");
 		}
 		else
 		if(cmpLex("=>"))
 		{
-			inst_table_.gen_instr("GEQ",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
 			matchLex("=>");
 		}
-		else {
-			inst_table_.gen_instr("LEQ",0);
-			inst_table_.push_jump();
-			inst_table_.gen_instr("JUMPZ",0);
+		else 
+		{
 			matchLex("=<");
 		}
 	}
@@ -1130,10 +1131,6 @@ void Parser::FA()
 	if (cmpLex("-"))
 	  matchLex("-");
     
-	if(cmpTok("identifier")) {
-	  std::string id = testToken.lexeme;
-	  inst_table_.gen_instr("PUSHM", sym_table_.get_address(id));
-	}
 	PMY();
 }
 
@@ -1150,48 +1147,32 @@ void Parser::PMY()
 		cmpLex("(") )
 	{
 
-		if (cmpTok("integer"))
-		{
-			matchTok("integer");
-		}
-		else
-		if (cmpTok("real"))
-		{
-			matchLex("real");
-		}
-		else
-		if (cmpLex("true"))
-		{
-			matchLex("true");
-		}
-		else
-		if (cmpLex("false"))
-		{
-			matchLex("false");
-		}
-		else
-		if (cmpTok("identifier"))
-		{
-			matchTok("identifier");
-			PMYpr();
-		}
-		else
-		//if (testToken.lexeme.compare("(") == 0)
-		{
-			matchLex("(");
-			E();
-			if (cmpLex(")"))
-			{
-				matchLex(")");
-			}
-			else
-				errorLex(")");
-
+		if (cmpTok("integer")) {
+	      inst_table_.gen_instr("PUSHI", stoi(testToken.lexeme));
+		  matchTok("integer");
+		} else if (cmpTok("real")) {
+		  matchLex("real");
+		} else if (cmpLex("true")) {
+		  matchLex("true");
+		} else if (cmpLex("false")) {
+		  matchLex("false");
+		} else if (cmpTok("identifier")) {
+		  std::string id = testToken.lexeme;
+	      inst_table_.gen_instr("PUSHM", sym_table_.get_address(id));
+		  matchTok("identifier");
+		  PMYpr();
+		} else {
+		  //if (testToken.lexeme.compare("(") == 0)
+		  matchLex("(");
+	      E();
+		  if (cmpLex(")")) {
+		    matchLex(")");
+		  } else {
+			errorLex(")");
+		  }
 			return;
 		}
-	}
-	else
-	{
+	} else {
 		cout << "Error: Expected primary in line " << lineNum;
 		output << "Error: Expected primary in line " << lineNum;
 		exit(0);

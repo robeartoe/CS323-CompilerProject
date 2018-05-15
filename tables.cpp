@@ -49,7 +49,7 @@ void InstructionTable::gen_instr(const std::string &op, int operand) {
 }
 
 void InstructionTable::push_jump() {
-  jump_stack_.push(instruction_++);
+  jump_stack_.push(instruction_);
 }
 
 void InstructionTable::print() {
