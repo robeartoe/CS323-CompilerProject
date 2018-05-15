@@ -25,7 +25,6 @@ int main(){
 	string fileInputName,fileOutputName;	// File Handles to be Processed
 	Token tkns;
 
-
 	std::cout << "Please enter the name of the input file: ";
 	getline(cin, fileInputName);
 

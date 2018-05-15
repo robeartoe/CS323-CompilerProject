@@ -8,6 +8,7 @@ Project: Assignment 3
 */
 
 #include "parser.h"
+#include "tables.h"
 #include <iomanip>
 #include <string>
 using namespace std;
@@ -623,7 +624,7 @@ void Parser::Q()
 	{
 		if(cmpLex("int")) {
 			matchLex("int");
-			sym_table_.set_current_type("int");
+			sym_table_.set_current_type("integer");
 		} else if(cmpLex("boolean")) {
 			matchLex("boolean");
 		    sym_table_.set_current_type("boolean");
@@ -825,7 +826,7 @@ void Parser::A()
 
 	if (cmpTok("identifier"))
 	{
-		std::string save = testToken.token;
+		std::string save = testToken.lexeme;
 		matchTok("identifier");
 		matchLex("=");
 		E();
@@ -1141,7 +1142,6 @@ void Parser::PMY()
 	if(printRules)
 		printProduction("<Primary> ::= int | <Identifier> <Primary>' | ( <Expression> ) | real | true | false");
 
- 
 	if (cmpTok("integer")		||
 		cmpTok("real")			||
 		cmpLex("true")			||
@@ -1211,7 +1211,6 @@ void Parser::PMYpr()
 			matchLex(")");
 		else
 			errorLex(")");
-
 	}
 	EMP();
 }

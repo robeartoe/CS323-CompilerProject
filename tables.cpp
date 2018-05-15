@@ -8,8 +8,7 @@ void SymbolTable::insert(std::string &id) {
     std::cout << id + " previously declared" << std::endl;
     exit(1);
   }
-  
-  Symbol newRow(current_type_, id, address_++);
+  Symbol newRow(id, current_type_, address_++);
   table_[newRow.address_] = newRow;
 }
 
