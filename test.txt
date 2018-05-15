@@ -1,6 +1,4 @@
 %%
-int a, b, c, x;
-a = 1;
-b = 2;
-c = 3;
+int z, a, b, c, x;
+
 x = a + b * c;

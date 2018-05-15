@@ -1130,7 +1130,7 @@ void Parser::FA()
 	if (cmpLex("-"))
 	  matchLex("-");
     
-	if(cmpLex("identifier")) {
+	if(cmpTok("identifier")) {
 	  std::string id = testToken.lexeme;
 	  inst_table_.gen_instr("PUSHM", sym_table_.get_address(id));
 	}

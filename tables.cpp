@@ -38,7 +38,6 @@ bool SymbolTable::is_duplicate(std::string &id) {
       return true;
     }
   }
-
   return false;
 }
 
