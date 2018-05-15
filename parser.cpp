@@ -856,7 +856,6 @@ void Parser::I()
 		// TODO: I thought I had the logic right, but not quite.
 		 //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. 
 		 // So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
-        
 		inst_table_.back_patch();
 		Ipr();
 		
