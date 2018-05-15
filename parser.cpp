@@ -927,7 +927,7 @@ void Parser::PR()
 	{
 		matchLex("put");
 		matchLex("(");
-		inst_table_.gen_instr("STDOUT",0);
+		inst_table_.gen_instr("STDOUT", 0);
 		E();
 		matchLex(")");
 		matchLex(";");
@@ -948,7 +948,7 @@ void Parser::SC()
 	{
 		matchLex("get");
 		matchLex("(");
-		inst_table_.gen_instr("STDIN",0);
+		inst_table_.gen_instr("STDIN", 0);
 		IDS(); //From within here... You add the popm instructions?
 		matchLex(")");
 		matchLex(";");
