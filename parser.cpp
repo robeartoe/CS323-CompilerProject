@@ -946,6 +946,7 @@ void Parser::SC()
 
 	if (cmpLex("get"))
 	{
+		sym_table_.set_current_type("scan");
 		matchLex("get");
 		matchLex("(");
 		inst_table_.gen_instr("STDIN", 0);

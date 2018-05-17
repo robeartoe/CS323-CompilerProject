@@ -4,12 +4,14 @@
 SymbolTable::SymbolTable() : address_(STARTING_ADDRESS) {}
 
 void SymbolTable::insert(std::string &id) {
-  if (is_duplicate(id)) {
-    std::cout << id + " previously declared" << std::endl;
-    exit(1);
+  if (current_type_.compare("scan") != 0) {
+    if (is_duplicate(id)) {
+      std::cout << id + " previously declared" << std::endl;
+      exit(1);
+    }
+    Symbol newRow(id, current_type_, address_++);
+    table_[newRow.address_] = newRow;
   }
-  Symbol newRow(id, current_type_, address_++);
-  table_[newRow.address_] = newRow;
 }
 
 void SymbolTable::set_current_type(const std::string &type) {

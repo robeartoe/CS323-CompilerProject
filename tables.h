@@ -28,7 +28,9 @@ private:
   size_t address_;
   std::map<int, Symbol> table_;
 
-  std::string current_type_;
+  // store object type for creating object
+  std::string current_type_; 
+
   bool is_duplicate(std::string &id);
 public:
   SymbolTable();
