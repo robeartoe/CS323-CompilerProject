@@ -846,19 +846,15 @@ void Parser::I()
 	{
 		matchLex("if");
 
-		// int addr = sym_table_.get_address();
-
 		matchLex("(");
 		CND();
 		matchLex(")");
 		S();
-
-		// TODO: I thought I had the logic right, but not quite.
-		 //So it just got out of the if statement. Check if there is an else statment. IF the IF statement happened, then it has to jump over the else statement. 
-		 // So.. the jump to go over else, needs to be in the line before the first jump(First jump goes to the end of if).
-		inst_table_.back_patch();
-		Ipr();
+        
+		if (!cmpLex("else")) 
+          inst_table_.back_patch();
 		
+		Ipr();
 	}
 	else
 		errorLex("if");
@@ -874,9 +870,12 @@ void Parser::Ipr()
 	else
 	if (cmpLex("else"))
 	{
+		inst_table_.gen_instr("JUMP", 0);
+		inst_table_.back_patch();
+		inst_table_.push_jump();
 		matchLex("else");
 		S();
-		//I believe .... there's a back_patch around here?
+		inst_table_.back_patch();
 		matchLex("endif");
 	}
 	else
@@ -946,7 +945,7 @@ void Parser::SC()
 
 	if (cmpLex("get"))
 	{
-		sym_table_.set_current_type("scan");
+		sym_table_.set_current_type("scan");  // prevent multiple declaration error in IDS()
 		matchLex("get");
 		matchLex("(");
 		inst_table_.gen_instr("STDIN", 0);

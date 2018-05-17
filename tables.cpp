@@ -65,7 +65,7 @@ void InstructionTable::print() {
 void InstructionTable::back_patch() {
   size_t addr = jump_stack_.top();
   jump_stack_.pop();
-  table_[addr].operand_ = instruction_++;
+  table_[addr].operand_ = instruction_;
 }
 
 size_t InstructionTable::get_inst_num() {

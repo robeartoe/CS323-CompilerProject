@@ -1,4 +1,13 @@
 %%
-real b;
-get(b);
-put (b);
+int a, b, c;
+a = 3;
+b = 2;
+
+if (a < b) 
+{
+    a = c;
+}
+
+else 
+a = b;
+endif;

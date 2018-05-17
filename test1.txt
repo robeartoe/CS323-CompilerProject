@@ -1,4 +1,4 @@
 %%
-int i, max;
-while (i < max)
-  i = i + 1;
+  int A, B123$; !Declarations!
+  get(A, B123$);
+  put(add$(A,B123$));
