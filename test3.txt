@@ -1,13 +1,19 @@
 %%
-int a, b, c;
-a = 3;
-b = 2;
+  real principal$,maxPrincipal,salesTax; !REAL Declarations!
+  int step; !INT Declarations!
 
-if (a < b) 
-{
-    a = c;
-}
+  get(principal$,maxPrincipal,salesTax,step);
+  while(step < maxPrincipal)
+    {
+      put(principal);
+      put(salesTax);
+      put(principal + salesTax);
+      step = step + 1;
+    }
 
-else 
-a = b;
-endif;
+    if (step == maxPrincipal)
+      put(true);
+    else
+      put(false);
+    endif
+    

@@ -1,4 +1,10 @@
 %%
-  int A, B123$; !Declarations!
-  get(A, B123$);
-  put(add$(A,B123$));
+int a, b, c;
+a = 3;
+b = 2;
+c = 1;
+if (a < b) 
+  a = c;
+else 
+  a = b;
+endif
