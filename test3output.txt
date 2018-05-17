@@ -1,0 +1,102 @@
+Identifer: one$
+Type: integer
+Address: 2000
+Identifer: two$
+Type: integer
+Address: 2001
+Identifer: three$
+Type: integer
+Address: 2002
+Identifer: i
+Type: integer
+Address: 2003
+Address: 1
+ Operation: PUSHI
+ Operand: 0
+Address: 2
+ Operation: POPM
+ Operand: 2003
+Address: 3
+ Operation: PUSHI
+ Operand: 2
+Address: 4
+ Operation: POPM
+ Operand: 2000
+Address: 5
+ Operation: PUSHI
+ Operand: 5
+Address: 6
+ Operation: POPM
+ Operand: 2001
+Address: 7
+ Operation: PUSHI
+ Operand: 9
+Address: 8
+ Operation: POPM
+ Operand: 2002
+Address: 9
+ Operation: PUSHM
+ Operand: 2001
+Address: 10
+ Operation: PUSHI
+ Operand: 5
+Address: 11
+ Operation: ADD
+ Operand: 0
+Address: 12
+ Operation: POPM
+ Operand: 2000
+Address: 13
+ Operation: PUSHI
+ Operand: 6
+Address: 14
+ Operation: PUSHI
+ Operand: 2
+Address: 15
+ Operation: DIV
+ Operand: 0
+Address: 16
+ Operation: POPM
+ Operand: 2001
+Address: 17
+ Operation: PUSHM
+ Operand: 2000
+Address: 18
+ Operation: PUSHM
+ Operand: 2001
+Address: 19
+ Operation: DIV
+ Operand: 0
+Address: 20
+ Operation: POPM
+ Operand: 2002
+Address: 21
+ Operation: LABEL
+ Operand: 0
+Address: 22
+ Operation: PUSHM
+ Operand: 2003
+Address: 23
+ Operation: PUSHM
+ Operand: 2002
+Address: 24
+ Operation: LES
+ Operand: 0
+Address: 25
+ Operation: JUMPZ
+ Operand: 31
+Address: 26
+ Operation: PUSHM
+ Operand: 2003
+Address: 27
+ Operation: PUSHI
+ Operand: 1
+Address: 28
+ Operation: ADD
+ Operand: 0
+Address: 29
+ Operation: POPM
+ Operand: 2003
+Address: 30
+ Operation: JUMP
+ Operand: 21

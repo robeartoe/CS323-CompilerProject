@@ -1,0 +1,54 @@
+Identifer: a
+Type: integer
+Address: 2000
+Identifer: b
+Type: integer
+Address: 2001
+Identifer: c
+Type: integer
+Address: 2002
+Address: 1
+ Operation: PUSHI
+ Operand: 3
+Address: 2
+ Operation: POPM
+ Operand: 2000
+Address: 3
+ Operation: PUSHI
+ Operand: 2
+Address: 4
+ Operation: POPM
+ Operand: 2001
+Address: 5
+ Operation: PUSHI
+ Operand: 1
+Address: 6
+ Operation: POPM
+ Operand: 2002
+Address: 7
+ Operation: PUSHM
+ Operand: 2000
+Address: 8
+ Operation: PUSHM
+ Operand: 2001
+Address: 9
+ Operation: LES
+ Operand: 0
+Address: 10
+ Operation: JUMPZ
+ Operand: 14
+Address: 11
+ Operation: PUSHM
+ Operand: 2002
+Address: 12
+ Operation: POPM
+ Operand: 2000
+Address: 13
+ Operation: JUMP
+ Operand: 0
+Address: 14
+ Operation: PUSHM
+ Operand: 16
+Address: 15
+ Operation: POPM
+ Operand: 2000

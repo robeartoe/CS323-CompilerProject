@@ -1,19 +1,25 @@
 %%
-  real principal$,maxPrincipal,salesTax; !REAL Declarations!
-  int step; !INT Declarations!
-
-  get(principal$,maxPrincipal,salesTax,step);
-  while(step < maxPrincipal)
-    {
-      put(principal);
-      put(salesTax);
-      put(principal + salesTax);
-      step = step + 1;
-    }
-
-    if (step == maxPrincipal)
-      put(true);
-    else
-      put(false);
-    endif
-    
+    int one$, two$, three$, i;
+	
+	i = 0;
+	
+	one$ = 2;
+	two$ = 5;
+	three$ = 9;
+	
+	one$ = two$ + 5;
+	two$ = 6 / 2;
+	three$ = one$ / two$;
+	
+	while( i < three$)
+		i = i + 1;
+		
+	int a, b, c;
+	a = 3;
+	b = 2;
+	c = 1;
+	if (a < b) 
+		a = c;
+	else 
+		a = b;
+	endif

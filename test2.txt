@@ -1,17 +1,15 @@
-! this is comment for this sample code which
-   converts  Fahrenheit into Celcius. This file is < 20 source lines !
-
-function convert$ [fahr:int]
-{
-           return 5 * (fahr -32) / 9;
-}
-
 %%
-     int    low,  high, step$;      ! declarations !
-
-     get (low, high, step$);
-     while (low  <  high )
-         {  put (low);
-             put (convert$ (low));
-             low =  low  +  step$;
-         }
+    int one$, two$, three$, i;
+	
+	i = 0;
+	
+	one$ = 2;
+	two$ = 5;
+	three$ = 9;
+	
+	one$ = two$ + 5;
+	two$ = 6 / 2;
+	three$ = one$ / two$;
+	
+	while( i < three$)
+		i = i + 1;
