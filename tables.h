@@ -34,7 +34,7 @@ public:
   SymbolTable();
   void insert(std::string &id);
   int get_address(std::string &token);
-  void print();
+  void print(std::ofstream &output);
   void set_current_type(const std::string &type);
   bool type_mismatch(const std::string &type);
   
@@ -49,7 +49,7 @@ private:
 public:
   InstructionTable();
   void gen_instr(const std::string &op, int operand);
-  void print();
+  void print(std::ofstream &output);
   void back_patch();
   void push_jump();
   size_t get_inst_num();

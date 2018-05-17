@@ -1,5 +1,7 @@
 #include "tables.h"
 #include <iostream>
+#include <fstream>
+#include <string>
 
 SymbolTable::SymbolTable() : address_(STARTING_ADDRESS) {}
 
@@ -31,11 +33,14 @@ int SymbolTable::get_address(std::string &token) {
   return -1;
 }
 
-void SymbolTable::print() {
+void SymbolTable::print(std::ofstream &output) {
   for (auto &i : table_) {
     std::cout << "Identifer: " << i.second.identifier_ << std::endl;
     std::cout << "Type: " << i.second.type_ << std::endl;
     std::cout << "Address: " << i.second.address_ << std::endl;
+	output << "Identifer: " << i.second.identifier_ << std::endl;
+    output << "Type: " << i.second.type_ << std::endl;
+    output << "Address: " << i.second.address_ << std::endl;
   }
 }
 
@@ -59,11 +64,14 @@ void InstructionTable::push_jump() {
   jump_stack_.push(instruction_);
 }
 
-void InstructionTable::print() {
+void InstructionTable::print(std::ofstream& output) {
   for (auto &i : table_) {
     std::cout << "Address: " << i.second.address_ << std::endl;
     std::cout << " Operation: "<< i.second.op_ << std::endl;
     std::cout << " Operand: "<< i.second.operand_ << std::endl;
+	output << "Address: " << i.second.address_ << std::endl;
+    output << " Operation: "<< i.second.op_ << std::endl;
+    output << " Operand: "<< i.second.operand_ << std::endl;
   }
 }
 

@@ -24,7 +24,7 @@ struct Token {
 class Parser {
 	private:
 		//PRINT PRODUCTION RULES
-		bool printRules = true;
+		bool printRules = false;
         void check_int();
         SymbolTable sym_table_;
 		InstructionTable inst_table_;

@@ -424,7 +424,7 @@ void Parser::printToken(Token x)
 	if(cmpTok("EOF"))
 		printRules = false;
 	else
-		printRules = true;
+		printRules = false;
 
 	if (printRules && !cmpTok("EOF"))
 	{
@@ -1226,8 +1226,8 @@ void Parser::parseMsg()
 }
 
 void Parser::print_tables() {
-  sym_table_.print();
-  inst_table_.print();
+  sym_table_.print(output);
+  inst_table_.print(output);
 }
 
 void Parser::check_int() {
