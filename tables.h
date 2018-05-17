@@ -27,10 +27,8 @@ private:
   const size_t STARTING_ADDRESS = 2000;
   size_t address_;
   std::map<int, Symbol> table_;
-
   // store object type for creating object
   std::string current_type_; 
-
   bool is_duplicate(std::string &id);
 public:
   SymbolTable();
@@ -38,13 +36,14 @@ public:
   int get_address(std::string &token);
   void print();
   void set_current_type(const std::string &type);
+  bool type_mismatch(const std::string &type);
+  
 };
 
 class InstructionTable {
 private:
   const size_t STARTING_INSTRUCTION = 1;
   size_t instruction_;
-  std::stack<int> instruction_stack_;
   std::stack<int> jump_stack_;
   std::map<int, Instruction> table_;
 public:

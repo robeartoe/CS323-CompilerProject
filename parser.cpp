@@ -828,6 +828,7 @@ void Parser::A()
 	{
 		std::string save = testToken.lexeme;
 		matchTok("identifier");
+		sym_table_.set_current_type(testToken.token);
 		matchLex("=");
 		E();
 		inst_table_.gen_instr("POPM", sym_table_.get_address(save));
@@ -1073,6 +1074,7 @@ void Parser::Epr()
 	if (cmpLex("+"))
 	{
 		matchLex("+");
+		check_int();
 		T();
 		inst_table_.gen_instr("ADD", 0); //Essentially 0 is NIL.
 		Epr();
@@ -1081,6 +1083,7 @@ void Parser::Epr()
 	if (cmpLex("-"))
 	{
 		matchLex("-");
+		check_int();
 		T();
 		inst_table_.gen_instr("SUB", 0);
 		Epr();
@@ -1105,6 +1108,7 @@ void Parser::Tpr()
 
 	if (cmpLex("*"))
 	{
+		check_int();
 		matchLex("*");
 		FA();
 		inst_table_.gen_instr("MUL", 0);
@@ -1113,6 +1117,7 @@ void Parser::Tpr()
 	else
 	if (cmpLex("/"))
 	{
+		check_int();
 		matchLex("/");
 		FA();
 		inst_table_.gen_instr("DIV", 0);
@@ -1147,13 +1152,16 @@ void Parser::PMY()
 	{
 
 		if (cmpTok("integer")) {
+		  sym_table_.set_current_type("integer");
 	      inst_table_.gen_instr("PUSHI", stoi(testToken.lexeme));
 		  matchTok("integer");
 		} else if (cmpTok("real")) {
 		  matchLex("real");
 		} else if (cmpLex("true")) {
+		  sym_table_.set_current_type("boolean");
 		  matchLex("true");
 		} else if (cmpLex("false")) {
+		  sym_table_.set_current_type("boolean");
 		  matchLex("false");
 		} else if (cmpTok("identifier")) {
 		  std::string id = testToken.lexeme;
@@ -1218,6 +1226,13 @@ void Parser::parseMsg()
 }
 
 void Parser::print_tables() {
-  
+  sym_table_.print();
   inst_table_.print();
+}
+
+void Parser::check_int() {
+	if (sym_table_.type_mismatch("integer")) {
+	  std::cout << "invalid operation - check type.   Line:  " 
+	    << lineNum << std::endl;
+	}
 }

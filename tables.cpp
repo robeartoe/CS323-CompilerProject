@@ -18,6 +18,10 @@ void SymbolTable::set_current_type(const std::string &type) {
   current_type_ = type;
 }
 
+bool SymbolTable::type_mismatch(const std::string &type) {
+  return (current_type_.compare(type) == 0);
+}
+
 int SymbolTable::get_address(std::string &token) {
   for (auto &i : table_) {
     if (i.second.identifier_ == token) {
@@ -29,8 +33,9 @@ int SymbolTable::get_address(std::string &token) {
 
 void SymbolTable::print() {
   for (auto &i : table_) {
-    std::cout << "Identifer: "<< i.second.identifier_ << std::endl;
-    std::cout << "Type: "<< i.second.type_ << std::endl;
+    std::cout << "Identifer: " << i.second.identifier_ << std::endl;
+    std::cout << "Type: " << i.second.type_ << std::endl;
+    std::cout << "Address: " << i.second.address_ << std::endl;
   }
 }
 
